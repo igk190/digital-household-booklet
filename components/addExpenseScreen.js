@@ -1,9 +1,8 @@
 import React from 'react';
-import { Text, View, AppRegistry, StyleSheet } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
 class AddExpensesScreen extends React.Component {
-
     static navigationOptions = {
       title: 'Add Expenses',
     };
@@ -17,12 +16,7 @@ class AddExpensesScreen extends React.Component {
         displayExpenses: false,
       }
     }
-    
-    displayExpensesField = () => {
-      if (this.state.displayExpenses == false) {
-        this.setState({displayExpenses: true})
-      }
-    }
+
 
     loopThroughExpenses = () => {
       let all = this.state.expenses;
@@ -31,33 +25,26 @@ class AddExpensesScreen extends React.Component {
         console.log('€:', o.expense, 'Category: ', o.category)
       })
     }
-      // let subarray = [];
-      // all.map(function(o) {
-      //   console.log('amireachherrr')
-      //   subarray.map(function(b){
-      //     console.log('herroooo')
-      //     console.log(all[o], b )
-      //   })
-      // })
-      
-
-   
+    
+    updateDisplayExpenses = () => {
+      this.setState({displayExpenses: true})
+    }
     
     render() {
+
+     
       return (
         <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-          {/* <Text>Add Expenses Screen</Text> */}
-          
           <Input
-            placeholder='HOW MUCH U SPENT'
+            placeholder='How much did you spend?'
             keyboardType='numeric'
             onChangeText={(text) => this.setState({expense:text})}
           /><Input
-            placeholder='WUT CATEGORY'
+            placeholder='Category?'
             onChangeText={(text) => this.setState({category:text})}
           />
           <Button
-            style={{margin: '10%'}}
+            style={{margin: '5%'}}
             title="Save" 
             onPress={() => {
               const exp = this.state.expense;
@@ -66,23 +53,31 @@ class AddExpensesScreen extends React.Component {
                 "expense": exp,
                 "category": cat
               }
-              // console.log(newitem);
-
-              // var joined = this.state.expenses.concat(newitem);
               let expenses = this.state.expenses;
               expenses.push(newitem);
-              this.setState({expenses: expenses})
+              // this.setState({expenses: expenses})
+              this.updateDisplayExpenses()
 
-              this.displayExpensesField()
+
+              this.setState((prevState) => ({
+                // console.log('test')
+                expenses: [...prevState.expenses, {expenses: expenses}]
+              }))
+
+
             }}
           />
 
         
-            { this.state.displayExpenses ? <Text style={{fontSize: 25, textAlign:'center'}}>
-              {this.loopThroughExpenses()}
-              {console.log()}
-            </Text> : null}
-          
+            { 
+              this.state.displayExpenses ? 
+              <Text style={{fontSize: 25, textAlign:'center'}}>
+                {this.loopThroughExpenses()}
+                €: {this.state.expense}, Category: {this.state.category}
+              </Text> 
+            : 
+            null
+            }  
          
           <Button
           title="Go back"
@@ -93,8 +88,6 @@ class AddExpensesScreen extends React.Component {
           onPress ={ () => this.props.navigation.navigate('Home')}
           />
 
-          
-  
         </View>
       );
     }
