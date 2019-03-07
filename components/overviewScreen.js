@@ -6,7 +6,8 @@ class OverviewScreen extends React.Component {
     render() {
       return (
         <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text>Overview</Text>
+          <Text>Overview {"\n"}
+            Here we will see all expenses</Text>
           <Button
           title="Go to Home"
           onPress={() => this.props.navigation.navigate('Home')}
