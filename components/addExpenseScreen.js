@@ -40,39 +40,16 @@ class AddExpensesScreen extends React.Component {
     addExpenseCatRow = () => {
 
       const exp = this.state.expense;
-      // console.log('kjjbkjkkjhj',exp)
       const cat = this.state.category;
-      // let oldExpensesStateArray = this.state.expenses; // empty because you didnt setstae yet DUH
-      // let newItem = {
-      //   expenses: exp, 
-      //   category: cat
-      // } // dit werkt niet; je krijgt item ook erbij; nested
-      // console.log(newItem)
-      let test = {"expense": exp, "category": cat};
-      // console.log('TEST',test)
+      let newRow = {"expense": exp, "category": cat};
       
       this.setState((prevState) => ({
-        expenses: [...prevState.expenses, Object.assign({}, test)]
+        expenses: [...prevState.expenses, Object.assign({}, newRow)]
       }))
 
-      console.log(this.state)
+      console.log('OKUR LOGGING STATE', this.state.expenses)
 
-      // this.setState({
-      //   expenses: [
-      //     {
-      //       expense: exp,
-      //       category: cat
-      //     }
-      //   ]
-      //   })
-      // }
-      // expensesNEW.push(newitem);
-      // this.updateDisplayExpenses();
-
-      // this.setState((prevState) => ({
-      //   expenses: [...prevState.expenses, {expensesNEW}]
-        
-      // }))
+  
     }
     
     render() {
