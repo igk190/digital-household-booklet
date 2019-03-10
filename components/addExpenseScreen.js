@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
 class AddExpensesScreen extends React.Component {
@@ -13,20 +13,7 @@ class AddExpensesScreen extends React.Component {
         expense: '',
         category: '',
         expenses: [],
-        displayExpenses: false,
       }
-    }
-    
-    updateDisplayExpenses = () => {
-      this.setState({displayExpenses: true})
-    }
-
-    loopThroughExpenses = () => {
-      let all = this.state.expenses;
-      console.log('all',all)
-      let newArray = all.map(function(o){
-        console.log('CONSOLE €:', o.expense, 'Category: ', o.category)
-      })
     }
 
     saveExpense = (expense) => {
@@ -41,14 +28,14 @@ class AddExpensesScreen extends React.Component {
 
       const exp = this.state.expense;
       const cat = this.state.category;
-      let newRow = {"expense": exp, "category": cat};
+      const id = Math.random() + 1;
+      let newRow = {"expense": exp, "category": cat, "id": id};
       
       this.setState((prevState) => ({
         expenses: [...prevState.expenses, Object.assign({}, newRow)]
       }))
 
       console.log('OKUR LOGGING STATE', this.state.expenses)
-
   
     }
     
@@ -71,7 +58,7 @@ class AddExpensesScreen extends React.Component {
           
           />
 
-            { 
+            {/* { 
               this.state.displayExpenses ? 
               <Text style={{fontSize: 25, textAlign:'center'}}>
                 {this.loopThroughExpenses()}
@@ -79,7 +66,23 @@ class AddExpensesScreen extends React.Component {
               </Text> 
             : 
             null
-            }  
+            }   */}
+          {/* <ul>
+            {this.state.expenses.map(item => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul> */}
+
+          {this.state.expenses.map((item) => (
+            <TouchableOpacity
+              style = {styles.container}
+              key={item.id}>
+              <Text style = {styles.text}>
+
+                €: {item.expense}, Category: {item.category}
+              </Text>
+              </TouchableOpacity>
+          ))}
          
          
           <Button
@@ -100,3 +103,15 @@ class AddExpensesScreen extends React.Component {
   
 
   export default AddExpensesScreen;
+
+  const styles = StyleSheet.create ({
+    container: {
+       padding: 10,
+       backgroundColor: '#d9f9b1',
+       marginTop: 3,
+       alignItems: 'center',
+    },
+    text: {
+       color: '#4f603c'
+    }
+ })
