@@ -2,9 +2,9 @@ import React from 'react';
 import { Text, View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
-class AddExpensesScreen extends React.Component {
+class AddTransactionsScreen extends React.Component {
     static navigationOptions = {
-      title: 'Add Expenses',
+      title: 'Add Transactions',
     };
 
     constructor(props){
@@ -58,21 +58,6 @@ class AddExpensesScreen extends React.Component {
           
           />
 
-            {/* { 
-              this.state.displayExpenses ? 
-              <Text style={{fontSize: 25, textAlign:'center'}}>
-                {this.loopThroughExpenses()}
-                IN APP €: {this.state.expense}, Category: {this.state.category}
-              </Text> 
-            : 
-            null
-            }   */}
-          {/* <ul>
-            {this.state.expenses.map(item => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul> */}
-
           {this.state.expenses.map((item) => (
             <TouchableOpacity
               style = {styles.container}
@@ -87,7 +72,7 @@ class AddExpensesScreen extends React.Component {
          
           <Button
           title="Go back"
-          onPress={() => this.props.navigation.navigate('AddExpenses')}
+          onPress={() => this.props.navigation.navigate('Transactions')}
           style={{margin: '1%'}}
           />
           <Button
@@ -102,13 +87,14 @@ class AddExpensesScreen extends React.Component {
   }
   
 
-  export default AddExpensesScreen;
+  export default AddTransactionsScreen;
 
   const styles = StyleSheet.create ({
     container: {
        padding: 10,
        backgroundColor: '#d9f9b1',
        marginTop: 3,
+       width: "100%",
        alignItems: 'center',
     },
     text: {
