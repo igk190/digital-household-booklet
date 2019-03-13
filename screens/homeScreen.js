@@ -23,7 +23,7 @@ class HomeScreen extends React.Component {
           onPress={ () => this.props.navigation.navigate('AddTransaction')}
           />
           <Button
-          title="Transaction list"
+          title="List of transactions"
           style={{padding:1}}
           onPress={ () => this.props.navigation.navigate('TransactionList')}
           />

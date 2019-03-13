@@ -1,9 +1,9 @@
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 
-import HomeScreen from './components/homeScreen';
-import OverviewScreen from './components/overviewScreen';
-import TransactionListScreen from './components/TransactionListScreen';
-import AddTransactionScreen from './components/addTransactionScreen';
+import HomeScreen from './screens/homeScreen';
+import OverviewScreen from './screens/overviewScreen';
+import TransactionListScreen from './screens/TransactionListScreen';
+import AddTransactionScreen from './screens/addTransactionScreen';
 
 
 const AppNavigator = createStackNavigator(
