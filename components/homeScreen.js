@@ -14,15 +14,18 @@ class HomeScreen extends React.Component {
           <Text>Home</Text>
           <Button
           title="Overview"
+          style={{padding:1}}
           onPress={ () => this.props.navigation.navigate('Overview')}
+          />
+            <Button
+          title="Add transactions"
+          style={{padding:1}}
+          onPress={ () => this.props.navigation.navigate('AddTransaction')}
           />
           <Button
           title="Transaction list"
+          style={{padding:1}}
           onPress={ () => this.props.navigation.navigate('TransactionList')}
-          />
-          <Button
-          title="Add transactions"
-          onPress={ () => this.props.navigation.navigate('AddTransaction')}
           />
         </View>
       );
