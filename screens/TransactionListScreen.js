@@ -12,13 +12,17 @@ class TransactionListScreen extends Component {
       transactions: []
     };
 
-    componentDidMount() {
+    componentDidMount() { // is supposed to run after component is mounted
       transactionsRef.on('value', snapshot => {
         let data = snapshot.val();
         let transactions = Object.values(data);
+       
         this.setState({ transactions });
       });
     }
+    // componentWillUnmount() {
+    //   this._isMounted = false;
+    // }
 
     render() {
       return (

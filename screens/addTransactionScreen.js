@@ -15,7 +15,7 @@ import { db } from '../src/config';
 
 // NEW
 let addTransaction = transaction => {
-  db.ref('/transactions').push({   // items, SET DB coll to transactions in Firebase
+  db.ref('/transactions').push({   // items
     name: transaction
   });
 };
@@ -23,7 +23,7 @@ let addTransaction = transaction => {
 
 class AddTransactionsScreen extends Component {
     static navigationOptions = {
-      title: 'Add Transactions',
+      title: 'Add Transaction',
     };
 
     constructor(props){
@@ -32,7 +32,8 @@ class AddTransactionsScreen extends Component {
         // transaction: '',
         // category: '',
         // transactions: [],   // expense, expenses
-        name: ''
+        name: '',
+        transactionType: ''
       }
     }
 
@@ -43,9 +44,7 @@ class AddTransactionsScreen extends Component {
     // saveCategory = (category) => {
     //   this.setState({category: category})
     // }
-
     // addExpenseCatRow = () => {
-
     //   const exp = this.state.expense;
     //   const cat = this.state.category;
     //   const id = Math.random() + 1;
@@ -54,14 +53,12 @@ class AddTransactionsScreen extends Component {
     //   this.setState((prevState) => ({
     //     expenses: [...prevState.expenses, Object.assign({}, newRow)]
     //   }))
-
     //   console.log('OKUR LOGGING STATE', this.state.expenses)
-  
     // }
 
     handleChange = e => {
       this.setState({
-        name: e.nativeEvent.text
+        name: e.nativeEvent.text   // make such a function for each textinput?
       });
     };
     handleSubmit = () => {
@@ -73,15 +70,55 @@ class AddTransactionsScreen extends Component {
      
       return (
         <View style={styles.main}>
-        <Text style={styles.title}>Add Item</Text>
-        <TextInput style={styles.itemInput} onChange={this.handleChange} />
+        {/* <Text style={styles.title}>Add Transaction</Text> */}
+        <TextInput 
+        style={styles.itemInput} 
+        onChange={this.handleChange} 
+        keyboardType='numeric'
+        maxLength={10}
+        placeholder='€ Transaction amount'
+        />
+         <TextInput 
+        style={styles.itemInput} 
+        // onChange={this.handleChange}  ???? 
+        maxLength={30}
+        placeholder='Description e.g. Washing powder'
+        />
+
+        <View style={styles.BTNcontainer}>
+        <View style={styles.buttonContainer}>
+        <Button
+          title="Income"
+          onPress={() => this.setState({ transactionType: 'first' })}
+          isActive={this.state.transactionType === 'first'}
+        />
+        </View>
+        <View style={styles.buttonContainer}>
+        <Button
+          title="Expense"
+          onPress={() => this.setState({ transactionType: 'second' })}
+          isActive={this.state.transactionType === 'second'}
+        />
+        </View>
+        </View>
+
+        <Button
+          title="Recurring"
+          onPress={() => this.setState({ recurring: false })}
+          // isActive={this.state.transactionType === 'second'}
+        />
+
         <TouchableHighlight
           style={styles.button}
-          underlayColor="white"
-          onPress={this.handleSubmit}
-        >
-          <Text style={styles.buttonText}>Add</Text>
+          onPress={this.handleSubmit}> 
+          <Text style={styles.buttonText}>Save</Text>
         </TouchableHighlight>
+
+        <Button
+          title="Cancel"
+          type="outline"
+          raised
+          />
           {/* <Input
             placeholder='How much did you spend?'
             keyboardType='numeric'
@@ -108,14 +145,10 @@ class AddTransactionsScreen extends Component {
               </TouchableOpacity>
           ))} */}
          
-          {/* <Button
-          title="Go back"
-          onPress={() => this.props.navigation.navigate('Transactions')}
-          style={{margin: '1%'}}
-          /> */}
+      
           <Button
-          title="Go to Home"
-          onPress ={ () => this.props.navigation.navigate('Home')}
+          title="View Transaction List"
+          onPress ={ () => this.props.navigation.navigate('TransactionList')}
           style={{margin: '1%'}}
           />
 
@@ -143,7 +176,7 @@ const styles = StyleSheet.create ({
     padding: 30,
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#6565fc'
+    backgroundColor: 'white'
   },
   title: {
     marginBottom: 20,
@@ -154,27 +187,39 @@ const styles = StyleSheet.create ({
     height: 50,
     padding: 4,
     marginRight: 5,
-    fontSize: 23,
+    fontSize: 18,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: 'black',
     borderRadius: 8,
-    color: 'white'
+    color: 'black'
   },
   buttonText: {
     fontSize: 18,
-    color: '#111',
+    color: 'white',
     alignSelf: 'center'
   },
   button: {
     height: 45,
     flexDirection: 'row',
-    backgroundColor: 'white',
-    borderColor: 'white',
+    backgroundColor: 'green',
+    borderColor: 'green',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
     marginTop: 10,
     alignSelf: 'stretch',
     justifyContent: 'center'
+  },
+  btnINOUT: {
+    width: "45%"
+  },
+  BTNcontainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+  },
+  buttonContainer: {
+    flex: 1,
   }
 });
