@@ -4,11 +4,15 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
+  Keyboard,
   TextInput,
   AlertIOS,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableWithoutFeedback
+ 
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
+
 
 import { db } from '../src/config';
 
@@ -21,6 +25,12 @@ let addTransaction = transaction => {
 };
 // END NEW
 
+const DismissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    { children}
+  </TouchableWithoutFeedback>
+);
+
 class AddTransactionsScreen extends Component {
     static navigationOptions = {
       title: 'Add Transaction',
@@ -28,12 +38,17 @@ class AddTransactionsScreen extends Component {
 
     constructor(props){
       super(props)
+
       this.state = {
         // transaction: '',
         // category: '',
         // transactions: [],   // expense, expenses
         name: '',
-        transactionType: ''
+        amount: '',
+        transactionType: '', // income or expense
+        recurring: false,
+        category: ''
+
       }
     }
 
@@ -58,32 +73,35 @@ class AddTransactionsScreen extends Component {
 
     handleChange = e => {
       this.setState({
-        name: e.nativeEvent.text   // make such a function for each textinput?
+        description: e.nativeEvent.text   // make such a function for each textinput?
       });
     };
     handleSubmit = () => {
-      addTransaction(this.state.name); // add amount later
+      addTransaction(this.state.description); // add amount later
       AlertIOS.alert('Transaction saved succesfully');
     }
     
     render() {
      
       return (
+        <DismissKeyboard>
         <View style={styles.main}>
-        {/* <Text style={styles.title}>Add Transaction</Text> */}
-        <TextInput 
-        style={styles.itemInput} 
-        onChange={this.handleChange} 
-        keyboardType='numeric'
-        maxLength={10}
-        placeholder='€ Transaction amount'
-        />
-         <TextInput 
-        style={styles.itemInput} 
-        // onChange={this.handleChange}  ???? 
-        maxLength={30}
-        placeholder='Description e.g. Washing powder'
-        />
+        
+          <TextInput 
+          style={styles.itemInput} 
+          onChange={this.handleChange} 
+          keyboardType='numeric'
+          maxLength={10}
+          placeholder='€ Transaction amount'
+          />
+
+          <TextInput 
+          style={styles.itemInput} 
+          // onChange={this.handleChange}  ???? 
+          maxLength={50}
+          placeholder='Description e.g. Washing powder'
+          />
+        
 
         <View style={styles.BTNcontainer}>
         <View style={styles.buttonContainer}>
@@ -153,6 +171,7 @@ class AddTransactionsScreen extends Component {
           />
 
         </View>
+        </DismissKeyboard>
       );
     }
   }
