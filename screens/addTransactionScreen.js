@@ -20,8 +20,11 @@ import { db } from '../src/config';
 // NEW
 let addTransaction = transaction => {
   db.ref('/transactions').push({   // items
-    name: transaction
+    name: transaction.name,
+    amount: transaction.amount
+
   });
+  console.log(transaction, "dfsf") // what R u 
 };
 // END NEW
 
@@ -43,11 +46,11 @@ class AddTransactionsScreen extends Component {
         // transaction: '',
         // category: '',
         // transactions: [],   // expense, expenses
-        name: '',
-        amount: '',
-        transactionType: '', // income or expense
-        recurring: false,
-        category: ''
+          name: '',
+          amount: '',
+          transactionType: '', // income or expense
+          recurring: false,
+          category: ''
 
       }
     }
@@ -71,13 +74,22 @@ class AddTransactionsScreen extends Component {
     //   console.log('OKUR LOGGING STATE', this.state.expenses)
     // }
 
-    handleChange = e => {
+    handleAmountChange = e => {
       this.setState({
-        description: e.nativeEvent.text   // make such a function for each textinput?
+        amount: e.nativeEvent.text   // make such a function for each textinput?
       });
     };
+    handleDescriptionChange = e => {
+      this.setState({
+        name: e.nativeEvent.text   // make such a function for each textinput?
+      });
+      console.log(e)
+    };
+    
+
     handleSubmit = () => {
-      addTransaction(this.state.description); // add amount later
+      addTransaction(this.state);
+      // addTransaction(this.state.name);
       AlertIOS.alert('Transaction saved succesfully');
     }
     
@@ -86,57 +98,69 @@ class AddTransactionsScreen extends Component {
       return (
         <DismissKeyboard>
         <View style={styles.main}>
-        
-          <TextInput 
-          style={styles.itemInput} 
-          onChange={this.handleChange} 
-          keyboardType='numeric'
-          maxLength={10}
-          placeholder='€ Transaction amount'
-          />
+  
+
+          <View style={styles.BTNcontainer}>
+            <View style={styles.buttonBox}>
+              <Button
+                  style={styles.button}
+                  title="Cancel"
+                  onPress={() => this.props.navigation.navigate('Home')} // what about stuff typed in fields already?
+              />
+          </View>
+
+          <View style={styles.buttonBox}>
+            <TextInput 
+            style={styles.amountInput} 
+            onChange={this.handleAmountChange} 
+            keyboardType='numeric'
+            maxLength={10}
+            placeholder='€00.00'
+            />
+           </View>
+
+          <View style={styles.buttonBox}>
+              <TouchableHighlight
+                style={styles.button}
+                onPress={this.handleSubmit}> 
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
 
           <TextInput 
           style={styles.itemInput} 
-          // onChange={this.handleChange}  ???? 
+          onChange={this.handleDescriptionChange} 
           maxLength={50}
           placeholder='Description e.g. Washing powder'
           />
         
 
         <View style={styles.BTNcontainer}>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Income"
-          onPress={() => this.setState({ transactionType: 'first' })}
-          isActive={this.state.transactionType === 'first'}
-        />
-        </View>
-        <View style={styles.buttonContainer}>
-        <Button
-          title="Expense"
-          onPress={() => this.setState({ transactionType: 'second' })}
-          isActive={this.state.transactionType === 'second'}
-        />
-        </View>
-        </View>
-
-        <Button
+          <View style={styles.buttonBox}>
+            <Button
+              title="Income"
+              onPress={() => this.setState({ transactionType: 'first' })}
+              isActive={this.state.transactionType === 'first'}
+            />
+            </View>
+            <View style={styles.buttonBox}>
+            <Button
+              title="Expense"
+              onPress={() => this.setState({ transactionType: 'second' })}
+              isActive={this.state.transactionType === 'second'}
+            />
+          </View>
+          <Button
           title="Recurring"
           onPress={() => this.setState({ recurring: false })}
           // isActive={this.state.transactionType === 'second'}
         />
+        </View>
 
-        <TouchableHighlight
-          style={styles.button}
-          onPress={this.handleSubmit}> 
-          <Text style={styles.buttonText}>Save</Text>
-        </TouchableHighlight>
+        
 
-        <Button
-          title="Cancel"
-          type="outline"
-          raised
-          />
+     
           {/* <Input
             placeholder='How much did you spend?'
             keyboardType='numeric'
@@ -197,15 +221,22 @@ const styles = StyleSheet.create ({
     justifyContent: 'center',
     backgroundColor: 'white'
   },
-  title: {
-    marginBottom: 20,
-    fontSize: 25,
-    textAlign: 'center'
-  },
+  
   itemInput: {
     height: 50,
     padding: 4,
     marginRight: 5,
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 8,
+    color: 'black'
+  },
+  amountInput: {
+
+    height: 50,
+    padding: 4,
+    marginRight: 2,
     fontSize: 18,
     borderWidth: 1,
     borderColor: 'black',
@@ -226,6 +257,7 @@ const styles = StyleSheet.create ({
     borderRadius: 8,
     marginBottom: 10,
     marginTop: 10,
+    width: "75%",
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
@@ -238,7 +270,7 @@ const styles = StyleSheet.create ({
     alignItems: 'center',
     // justifyContent: 'center',
   },
-  buttonContainer: {
+  buttonBox: {
     flex: 1,
   }
 });
