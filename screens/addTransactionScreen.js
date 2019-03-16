@@ -67,11 +67,15 @@ class AddTransactionsScreen extends Component {
 
     toggleRecurring = () => {
       console.log(this.state.isRecurring)
-
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         isRecurring: !prevState.isRecurring
-      }))
-      console.log(this.state.isRecurring)
+      }),
+      () => {
+        console.log(this.state.isRecurring)
+
+      }
+      )
+      // console.log(this.state.isRecurring)
     }
     
     handleSubmit = () => {
