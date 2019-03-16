@@ -15,7 +15,7 @@ import { Input, Button } from 'react-native-elements';
 
 
 import { db } from '../src/config';
-
+// import RecurringButton from '../components/recurringButton';
 
 // NEW
 let addTransaction = transaction => {
@@ -43,36 +43,16 @@ class AddTransactionsScreen extends Component {
       super(props)
 
       this.state = {
-        // transaction: '',
-        // category: '',
-        // transactions: [],   // expense, expenses
           name: '',
           amount: '',
           transactionType: '', // income or expense
-          recurring: false,
+          isRecurring: false,
           category: ''
 
       }
     }
 
-    // saveExpense = (expense) => {
-    //   console.log(expense)
-    //   this.setState({expense: expense})
-    // }
-    // saveCategory = (category) => {
-    //   this.setState({category: category})
-    // }
-    // addExpenseCatRow = () => {
-    //   const exp = this.state.expense;
-    //   const cat = this.state.category;
-    //   const id = Math.random() + 1;
-    //   let newRow = {"expense": exp, "category": cat, "id": id};
-      
-    //   this.setState((prevState) => ({
-    //     expenses: [...prevState.expenses, Object.assign({}, newRow)]
-    //   }))
-    //   console.log('OKUR LOGGING STATE', this.state.expenses)
-    // }
+
 
     handleAmountChange = e => {
       this.setState({
@@ -91,6 +71,12 @@ class AddTransactionsScreen extends Component {
       addTransaction(this.state);
       // addTransaction(this.state.name);
       AlertIOS.alert('Transaction saved succesfully');
+    }
+
+    toggleRecurring = () => {
+      this.setState({
+        isRecurring: !this.state.isRecurring
+      })
     }
     
     render() {
@@ -139,53 +125,25 @@ class AddTransactionsScreen extends Component {
         <View style={styles.BTNcontainer}>
           <View style={styles.buttonBox}>
             <Button
-              title="Income"
+              title="Expense"
               onPress={() => this.setState({ transactionType: 'first' })}
               isActive={this.state.transactionType === 'first'}
             />
             </View>
             <View style={styles.buttonBox}>
             <Button
-              title="Expense"
+              title="Income"
               onPress={() => this.setState({ transactionType: 'second' })}
               isActive={this.state.transactionType === 'second'}
             />
           </View>
           <Button
-          title="Recurring"
-          onPress={() => this.setState({ recurring: false })}
+          title= {this.state.isRecurring ? 'YES' : 'NO'}
+          onPress={() => this.toggleRecurring()}
+            // this.setState({ recurring: false })}
           // isActive={this.state.transactionType === 'second'}
         />
         </View>
-
-        
-
-     
-          {/* <Input
-            placeholder='How much did you spend?'
-            keyboardType='numeric'
-            onChangeText={this.saveExpense}
-          /><Input
-            placeholder='Category?'
-            onChangeText={this.saveCategory}
-          />
-          <Button
-            style={{margin: '5%'}}
-            title="Save" 
-            onPress={this.addExpenseCatRow} 
-          
-          /> */}
-
-          {/* {this.state.expenses.map((item) => (
-            <TouchableOpacity
-              style = {styles.container}
-              key={item.id}>
-              <Text style = {styles.text}>
-
-                €: {item.expense}, Category: {item.category}
-              </Text>
-              </TouchableOpacity>
-          ))} */}
          
       
           <Button
@@ -193,6 +151,7 @@ class AddTransactionsScreen extends Component {
           onPress ={ () => this.props.navigation.navigate('TransactionList')}
           style={{margin: '1%'}}
           />
+
 
         </View>
         </DismissKeyboard>
