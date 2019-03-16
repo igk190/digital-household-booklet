@@ -21,10 +21,10 @@ import { db } from '../src/config';
 let addTransaction = transaction => {
   db.ref('/transactions').push({   // items
     name: transaction.name,
-    amount: transaction.amount
-
+    amount: transaction.amount,
+    isRecurring: transaction.isRecurring
   });
-  console.log(transaction, "dfsf") // what R u 
+  // console.log(transaction, "dfsf") // what R u 
 };
 // END NEW
 
@@ -46,7 +46,7 @@ class AddTransactionsScreen extends Component {
           name: '',
           amount: '',
           transactionType: '', // income or expense
-          isRecurring: false,
+          isRecurring: false, // default
           category: ''
 
       }
@@ -63,21 +63,24 @@ class AddTransactionsScreen extends Component {
       this.setState({
         name: e.nativeEvent.text   // make such a function for each textinput?
       });
-      console.log(e)
     };
-    
 
+    toggleRecurring = () => {
+      console.log(this.state.isRecurring)
+
+      this.setState(prevState => ({
+        isRecurring: !prevState.isRecurring
+      }))
+      console.log(this.state.isRecurring)
+    }
+    
     handleSubmit = () => {
       addTransaction(this.state);
       // addTransaction(this.state.name);
       AlertIOS.alert('Transaction saved succesfully');
     }
 
-    toggleRecurring = () => {
-      this.setState({
-        isRecurring: !this.state.isRecurring
-      })
-    }
+
     
     render() {
      
@@ -141,7 +144,7 @@ class AddTransactionsScreen extends Component {
           title= {this.state.isRecurring ? 'YES' : 'NO'}
           onPress={() => this.toggleRecurring()}
             // this.setState({ recurring: false })}
-          // isActive={this.state.transactionType === 'second'}
+          // isActive={this.state.transactionType === 'second'
         />
         </View>
          
