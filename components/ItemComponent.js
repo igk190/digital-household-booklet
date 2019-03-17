@@ -1,5 +1,5 @@
 import React, { Component } from 'react';  
-import { View, Text, StyleSheet } from 'react-native';  
+import { View, Text, StyleSheet, ScrollView} from 'react-native';  
 import PropTypes from 'prop-types';
 
 export default class ItemComponent extends Component {  
@@ -9,16 +9,17 @@ export default class ItemComponent extends Component {
 
   render() {
     return (
-      <View style={styles.itemsList}>
+      <ScrollView contentContainerStyle={styles.itemsList}>
         {this.props.transactions.map((transaction, index) => {
           return (
             <View key={index}>
-              <Text style={styles.itemtext}>{transaction.name}, €{transaction.amount}, {transaction.isRecurring ? 'Y' : 'N'}  </Text>
+              <Text style={styles.itemText}>{transaction.name} €{transaction.amount} {"\n"}
+               {transaction.isRecurring ? 'recurring' : 'Non-recurring'}, type:{transaction.transactionType}  </Text>
 
             </View>
           );
         })}
-      </View>
+      </ScrollView>
     );  
   }
 }
@@ -27,11 +28,14 @@ const styles = StyleSheet.create({
   itemsList: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    paddingVertical: 20,
   },
-  itemtext: {
+  
+  itemText: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    backgroundColor: 'lightgrey'
   }
 });

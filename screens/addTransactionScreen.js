@@ -22,7 +22,8 @@ let addTransaction = transaction => {
   db.ref('/transactions').push({   // items
     name: transaction.name,
     amount: transaction.amount,
-    isRecurring: transaction.isRecurring
+    isRecurring: transaction.isRecurring,
+    transactionType: transaction.transactionType
   });
   // console.log(transaction, "dfsf") // what R u 
 };
@@ -45,7 +46,7 @@ class AddTransactionsScreen extends Component {
       this.state = {
           name: '',
           amount: '',
-          transactionType: '', // income or expense
+          transactionType: 'expense', // income or expense, expense == default
           isRecurring: false, // default
           category: ''
 
@@ -72,10 +73,24 @@ class AddTransactionsScreen extends Component {
       }),
       () => {
         console.log(this.state.isRecurring)
-
       }
       )
       // console.log(this.state.isRecurring)
+    }
+
+   
+    toggleExpenseBtn = () => {
+      this.setState({
+        transactionType: 'expense'
+      })
+      console.log('bye monnie')
+
+    }
+    toggleIncomeBtn = () => {
+      console.log('rich bish')
+      this.setState({
+        transactionType: 'income'
+      })
     }
     
     handleSubmit = () => {
@@ -133,15 +148,20 @@ class AddTransactionsScreen extends Component {
           <View style={styles.buttonBox}>
             <Button
               title="Expense"
-              onPress={() => this.setState({ transactionType: 'first' })}
-              isActive={this.state.transactionType === 'first'}
+              // onPress={() => this.setState({ transactionType: 'first' })}
+              onPress={() => this.toggleExpenseBtn()}
+              style={this.state.transactionType === 'expense' ? styles.btnFat : styles.btnFaded}
             />
             </View>
             <View style={styles.buttonBox}>
             <Button
               title="Income"
-              onPress={() => this.setState({ transactionType: 'second' })}
-              isActive={this.state.transactionType === 'second'}
+              onPress={() => this.toggleIncomeBtn()}
+              style={this.state.transactionType === 'income' ? styles.btnFat : styles.btnFaded}
+
+             
+              
+              // onPress={() => this.setState({ transactionType: 'second' })}
             />
           </View>
           <Button
@@ -150,9 +170,10 @@ class AddTransactionsScreen extends Component {
             // this.setState({ recurring: false })}
           // isActive={this.state.transactionType === 'second'
         />
-        </View>
+        </View> 
+     
          
-      
+       
           <Button
           title="View Transaction List"
           onPress ={ () => this.props.navigation.navigate('TransactionList')}
@@ -168,6 +189,7 @@ class AddTransactionsScreen extends Component {
   
 
 export default AddTransactionsScreen;
+
 
 const styles = StyleSheet.create ({
   container: {
@@ -238,5 +260,15 @@ const styles = StyleSheet.create ({
   },
   buttonBox: {
     flex: 1,
+  },
+
+  btnFat: {
+    backgroundColor: '#00aeef',
+      borderColor: 'red',
+      borderWidth: 5,
+      borderRadius: 15  
+  },
+  btnDown: {
+    // some styles here
   }
 });
