@@ -94,11 +94,17 @@ class AddTransactionsScreen extends Component {
     }
     
     handleSubmit = () => {
-      addTransaction(this.state);
-      // addTransaction(this.state.name);
+      addTransaction(this.state); // this first THEN submitclear
+      this.submitAndClear();
       AlertIOS.alert('Transaction saved succesfully');
     }
-
+    submitAndClear = () => {
+      this.setState({
+        name: '',
+        amount: ''
+      })
+    }
+   
 
     
     render() {
@@ -120,10 +126,13 @@ class AddTransactionsScreen extends Component {
           <View style={styles.buttonBox}>
             <TextInput 
             style={styles.amountInput} 
-            onChange={this.handleAmountChange} 
+            onChange={this.handleAmountChange}  
             keyboardType='numeric'
             maxLength={10}
             placeholder='€00.00'
+            // NEW
+            value={this.state.amount}
+            // clearButtonMode='always'
             />
            </View>
 
@@ -135,12 +144,13 @@ class AddTransactionsScreen extends Component {
               </TouchableHighlight>
             </View>
           </View>
-
+ 
           <TextInput 
           style={styles.itemInput} 
           onChange={this.handleDescriptionChange} 
           maxLength={50}
           placeholder='Description e.g. Washing powder'
+          value={this.state.name}
           />
         
 

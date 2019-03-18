@@ -29,11 +29,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-around',
-    paddingVertical: 20,
+
   },
   
   itemText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',
     backgroundColor: 'lightgrey'
