@@ -101,7 +101,9 @@ class AddTransactionsScreen extends Component {
     submitAndClear = () => {
       this.setState({
         name: '',
-        amount: ''
+        amount: '',
+        isRecurring: false,
+        transactionType: 'expense'
       })
     }
    
