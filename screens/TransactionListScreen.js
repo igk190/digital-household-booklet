@@ -33,7 +33,7 @@ class TransactionListScreen extends Component {
         ) : (
           <Text>No transactions in da list </Text>
         )}
-        </View>
+        </View> 
       );
     }
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 
 class HomeScreen extends React.Component {
@@ -10,21 +10,25 @@ class HomeScreen extends React.Component {
   
     render() {
       return (
-        <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text>Home</Text>
+        <View style={styles.main}>
+  
           <Button
           title="Overview"
-          style={{padding:1}}
+          titleStyle={styles.buttonTitle}
+          buttonStyle={styles.btn}
           onPress={ () => this.props.navigation.navigate('Overview')}
           />
             <Button
           title="Add transactions"
-          style={{padding:1}}
+          titleStyle={styles.buttonTitle}
+          buttonStyle={styles.btn}
           onPress={ () => this.props.navigation.navigate('AddTransaction')}
           />
           <Button
           title="List of transactions"
-          style={{padding:1}}
+          titleStyle={styles.buttonTitle}
+          buttonStyle={styles.btn}
+        
           onPress={ () => this.props.navigation.navigate('TransactionList')}
           />
         </View>
@@ -33,3 +37,19 @@ class HomeScreen extends React.Component {
   }
 
   export default HomeScreen;
+
+  const styles = StyleSheet.create({
+    main: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center' 
+    },
+    btn: {
+      backgroundColor: 'pink',
+      margin:2,
+      width: 300
+    },
+    buttonTitle: {
+      fontSize: 35
+    }
+  })

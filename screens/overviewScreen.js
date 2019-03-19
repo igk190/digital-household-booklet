@@ -4,6 +4,10 @@ import { Button } from 'react-native-elements';
 
 
 class OverviewScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Overview', 
+  }; 
+
   constructor(props) {
     super(props)
 
@@ -14,9 +18,8 @@ class OverviewScreen extends React.Component {
   }
     render() {
       return (
-        <View style={{flex:1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text>Overview {"\n"}
-            Here we will see all expenses</Text>
+        <View style={styles.main}>
+           <Text> Here we will see all expenses</Text>
           <Button
           title="Go to Home"
           onPress={() => this.props.navigation.navigate('Home')}
@@ -30,3 +33,19 @@ class OverviewScreen extends React.Component {
   export default OverviewScreen;
 
   
+  const styles = StyleSheet.create({
+    main: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+
+      
+
+      // alignItems: 'center'
+      
+    },
+    text: {
+      textAlign: 'center',
+     
+    }
+  })
