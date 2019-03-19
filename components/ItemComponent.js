@@ -13,7 +13,7 @@ export default class ItemComponent extends Component {
         {this.props.transactions.map((transaction, index) => {
           return (
             <View key={index}>
-              <Text style={styles.itemText}>{transaction.name} €{transaction.amount} {"\n"}
+              <Text style={styles.itemText}>{transaction.name}, {transaction.amount} {"\n"}
                {transaction.isRecurring ? 'recurring' : 'Non-recurring'}, type:{transaction.transactionType}  </Text>
 
             </View>

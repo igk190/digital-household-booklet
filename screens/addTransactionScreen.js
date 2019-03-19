@@ -11,7 +11,9 @@ import {
   TouchableWithoutFeedback
  
 } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
+import { TextInputMask } from 'react-native-masked-text';
+
 
 
 import { db } from '../src/config';
@@ -57,12 +59,12 @@ class AddTransactionsScreen extends Component {
 
     handleAmountChange = e => {
       this.setState({
-        amount: e.nativeEvent.text   // make such a function for each textinput?
+        amount: e.nativeEvent.text   
       });
     };
     handleDescriptionChange = e => {
       this.setState({
-        name: e.nativeEvent.text   // make such a function for each textinput?
+        name: e.nativeEvent.text   
       });
     };
 
@@ -94,7 +96,7 @@ class AddTransactionsScreen extends Component {
     }
     
     handleSubmit = () => {
-      addTransaction(this.state); // this first THEN submitclear
+      addTransaction(this.state); // this first THEN submitclear needed?
       this.submitAndClear();
       AlertIOS.alert('Transaction saved succesfully');
     }
@@ -126,17 +128,32 @@ class AddTransactionsScreen extends Component {
           </View>
 
           <View style={styles.buttonBox}>
-            <TextInput 
-            style={styles.amountInput} 
-            onChange={this.handleAmountChange}  
-            keyboardType='numeric'
-            maxLength={10}
-            placeholder='€00.00'
-            // NEW
-            value={this.state.amount}
-            // clearButtonMode='always'
+            <TextInputMask
+              type={'money'}
+              options={{
+                precision: 2,
+                separator: ',',
+                delimiter: '.',
+                unit: '€',
+                suffixUnit: ''
+              }}
+              value={this.state.advanced}
+              onChangeText={amt => {
+                this.setState({
+                  amount: amt
+                })
+              }}
+              onChange={amt => {
+                this.handleAmountChange(amt)
+              }}
+              keyboardType='numeric'
+              maxLength={10}
+              style={styles.amountInput} 
+              placeholder='€00.00'
+              value={this.state.amount}
             />
            </View>
+           
 
           <View style={styles.buttonBox}>
               <TouchableHighlight
