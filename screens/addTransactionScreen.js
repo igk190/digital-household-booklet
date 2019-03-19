@@ -37,9 +37,9 @@ const DismissKeyboard = ({ children }) => (
 
 class AddTransactionsScreen extends Component {
     static navigationOptions = {
-      title: 'Add Transaction',
+      title: 'Add Transaction', 
     };
-
+ 
     constructor(props){
       super(props)
 
