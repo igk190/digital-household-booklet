@@ -164,34 +164,30 @@ class AddTransactionsScreen extends Component {
         
 
         <View style={styles.BTNcontainer}>
-          <View style={styles.buttonBox}>
             <Button
               title="Expense"
               onPress={() => this.toggleExpenseBtn()}
               style={this.state.transactionType === 'expense' ? styles.btnFat : styles.btnFaded}
             />
-          </View>
-          <View style={styles.buttonBox}>
+        
             <Button
               title="Income"
               onPress={() => this.toggleIncomeBtn()}
               style={this.state.transactionType === 'income' ? styles.btnFat : styles.btnFaded}
             />
-          </View>
+
             <Button
             title= {this.state.isRecurring ? 'YES' : 'NO'}
             onPress={() => this.toggleRecurring()} 
             />
         </View> 
-        <View
-        style={styles.viewTrans}>
+
+
           <Button
             title="View Transaction List"
             onPress ={ () => this.props.navigation.navigate('TransactionList')}
             style={{margin: '1%'}}
             /> 
-
-        </View>
          
         </View>
         </DismissKeyboard>
@@ -277,9 +273,7 @@ const styles = StyleSheet.create ({
       width: "45%"
     },
    
-    buttonBox: {
-      flex: 1,
-    },
+    
   
     btnFat: {
         backgroundColor: '#00aeef',
@@ -289,8 +283,5 @@ const styles = StyleSheet.create ({
     },
     btnDown: {
       // some styles here
-    },
-    viewTrans: {
-      // flex: 1/3
     }
   });
