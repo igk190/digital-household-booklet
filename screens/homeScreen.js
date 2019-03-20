@@ -19,7 +19,7 @@ class HomeScreen extends React.Component {
           onPress={ () => this.props.navigation.navigate('Overview')}
           />
             <Button
-          title="Add transactions"
+          title="Add transaction"
           titleStyle={styles.buttonTitle}
           buttonStyle={styles.btn}
           onPress={ () => this.props.navigation.navigate('AddTransaction')}
