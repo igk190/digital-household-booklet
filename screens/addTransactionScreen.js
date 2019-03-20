@@ -5,7 +5,6 @@ import {
   Keyboard,
   TextInput,
   AlertIOS,
-  TouchableHighlight,
   StyleSheet,
   TouchableWithoutFeedback
 } from 'react-native';
@@ -104,6 +103,9 @@ class AddTransactionsScreen extends Component {
         transactionType: 'expense'
       })
     }
+
+  
+
    
 
     
@@ -130,7 +132,7 @@ class AddTransactionsScreen extends Component {
                 unit: '€',
                 suffixUnit: ''
                 }}
-                value={this.state.advanced}
+                value={this.state.amount}
                 onChangeText={amt => {
                   this.setState({
                     amount: amt
@@ -146,11 +148,12 @@ class AddTransactionsScreen extends Component {
                 value={this.state.amount}
               />
       
-              <TouchableHighlight
-                style={styles.saveBtn}
-                onPress={this.handleSubmit}> 
-                <Text style={styles.buttonText}>Save</Text>
-              </TouchableHighlight>
+          
+              <Button
+                  buttonStyle={styles.saveBtn}
+                  title="Save"
+                  onPress={this.handleSubmit}
+              />
   
             </View> 
  
@@ -158,37 +161,43 @@ class AddTransactionsScreen extends Component {
             style={styles.itemInput} 
             onChange={this.handleDescriptionChange} 
             maxLength={50}
-            placeholder='Description e.g. Washing powder'
+            placeholder='Description e.g. washing powder'
             value={this.state.name}
             />
         
+        <View style={styles.textRow}>
+          <Text>Expense/Income:</Text>
+          <Text>Recurring:</Text>
+        </View>
 
-        <View style={styles.BTNcontainer}>
-            <Button
-              title="Expense"
-              onPress={() => this.toggleExpenseBtn()}
-              style={this.state.transactionType === 'expense' ? styles.btnFat : styles.btnFaded}
-            />
-        
-            <Button
-              title="Income"
-              onPress={() => this.toggleIncomeBtn()}
-              style={this.state.transactionType === 'income' ? styles.btnFat : styles.btnFaded}
-            />
+        <View style={styles.btnsRow}>
+          <View style={styles.nestedRow}>
+              <Button
+                title="Expense"
+                onPress={() => this.toggleExpenseBtn()}
+                buttonStyle={this.state.transactionType === 'expense' ? styles.btnFat : styles.btnFaded}
+              />
+              <Button
+                title="Income"
+                onPress={() => this.toggleIncomeBtn()}
+                buttonStyle={this.state.transactionType === 'income' ? styles.btnFat : styles.btnFaded}
+              />
+            </View>
 
             <Button
             title= {this.state.isRecurring ? 'YES' : 'NO'}
             onPress={() => this.toggleRecurring()} 
+            buttonStyle={styles.recurringBtn}
             />
         </View> 
 
 
-          <Button
+          {/* <Button
             title="View Transaction List"
             onPress ={ () => this.props.navigation.navigate('TransactionList')}
-            style={{margin: '1%'}}
+            buttonStyle={styles.listBtn}
             /> 
-         
+          */}
         </View>
         </DismissKeyboard>
       );
@@ -212,15 +221,17 @@ const styles = StyleSheet.create ({
     },
 
     BTNcontainer: {
-      flex: 1,
+      flex: 1/4,
       flexDirection: 'row',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
       alignItems: 'center',
+      marginBottom: 5
     },
 
     cancelBtn: {
       height: 40,
-      // width: '100%',
+      padding: 7,
+      borderRadius: 5,
       backgroundColor: 'red',
     },
     amountInput: {
@@ -231,6 +242,8 @@ const styles = StyleSheet.create ({
     saveBtn: {
       height: 40,
       padding: 7,
+      borderRadius: 5,
+
       backgroundColor: 'green',
     },
     
@@ -240,48 +253,64 @@ const styles = StyleSheet.create ({
       fontSize: 18,
       borderWidth: 1,
       borderColor: 'lightgrey',
-      borderRadius: 10,
+      borderRadius: 5,
       marginTop: 10,
       marginBottom: 10,
     },
-  
 
-
-
-
-
-
-    buttonText: {
-      fontSize: 18,
-      color: 'white',
-      alignSelf: 'center'
-    },
-    button: {
-      height: 45,
+    textRow: {
+      flex: 1/4,
       flexDirection: 'row',
-      backgroundColor: 'green',
-      borderColor: 'green',
-      borderWidth: 1,
-      borderRadius: 8,
-      marginBottom: 10,
-      marginTop: 10,
-      width: "75%",
-      alignSelf: 'stretch',
-      justifyContent: 'center'
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 5
     },
-    btnINOUT: {
-      width: "45%"
+
+     btnsRow: {
+      flex: 1/4,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+  },
+  nestedRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start', 
+  },
+    btnFat: {
+      height: 40,
+      backgroundColor: '#00aeef', 
     },
+    btnFaded: {
+      height: 40,
+      backgroundColor: '#DCDCDC'
+    },
+
+    listBtn: {
+      flex: 1/4,
+      margin: 1,
+      flexDirection: 'column',
+      alignSelf: 'flex-end'
+    },
+
+    recurringBtn: {
+         height: 40,
+      backgroundColor: '#00aeef'
+    }
+
+    
+
+
+
+
+
+
+    // buttonText: {
+    //   fontSize: 18,
+    //   color: 'white',
+    //   alignSelf: 'center'
+    // },
    
     
   
-    btnFat: {
-        backgroundColor: '#00aeef',
-        borderColor: 'red',
-        borderWidth: 5,
-        borderRadius: 15  
-    },
-    btnDown: {
-      // some styles here
-    }
+    
+    
   });
