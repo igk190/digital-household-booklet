@@ -108,17 +108,19 @@ class AddTransactionsScreen extends Component {
       })
     }
 
-  
-
-   
-
     
     render() {
 
-      const { amount, name } = this.state; 
-      const isEnabled = 
-        amount.length > 0 &&
-        name.length > 0;
+
+      validate = (amount, name) => {
+       return {
+         amount: amount.length === 0,
+         name: name.length === 0,
+       };
+     }
+
+     const errors = validate(this.state.amount, this.state.name);
+     const isEnabled = Object.keys(errors).some(x => errors[x]);
      
       return (
         <DismissKeyboard>
@@ -153,7 +155,7 @@ class AddTransactionsScreen extends Component {
                 }}
                 keyboardType='numeric'
                 maxLength={10}
-                style={styles.amountInput} 
+                style={errors.amount ? styles.amountInputWrong : styles.amountInput} 
                 placeholder='€00.00'
                 value={this.state.amount}
               />
@@ -163,13 +165,13 @@ class AddTransactionsScreen extends Component {
                   buttonStyle={styles.saveBtn}
                   title="Save"
                   onPress={this.handleSubmit}
-                  disabled={!isEnabled}
+                  disabled={isEnabled}
               />
   
             </View> 
  
             <TextInput 
-            style={styles.itemInput} 
+            style={errors.name ? styles.itemInputWrong : styles.itemInput} 
             onChange={this.handleDescriptionChange} 
             maxLength={50}
             placeholder='Description e.g. washing powder'
@@ -323,6 +325,25 @@ const styles = StyleSheet.create ({
     recurringBtn: {
          height: 40,
       backgroundColor: '#00aeef'
+    },
+
+    amountInputWrong: {
+      height: 40,
+      padding: 7,
+      fontSize: 22,
+      borderWidth: 1,
+      borderColor: 'red',
+      borderRadius: 3,
+    },
+    itemInputWrong: {
+      height: 50,
+      padding: 7,
+      fontSize: 18,
+      borderWidth: 1,
+      borderColor: 'red',
+      borderRadius: 5,
+      marginTop: 10,
+      marginBottom: 10,
     }
 
     
