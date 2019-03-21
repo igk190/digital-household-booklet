@@ -15,6 +15,8 @@ import { TextInputMask } from 'react-native-masked-text';
 
 import { db } from '../src/config';
 
+
+
 let addTransaction = transaction => {
   db.ref('/transactions').push({   // items
     name: transaction.name,
@@ -25,16 +27,11 @@ let addTransaction = transaction => {
   // console.log(transaction, "dfsf") // what R u 
 };
 
-
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     { children}
   </TouchableWithoutFeedback>
 );
-
-
-// TRY OUT
-
 
 class AddTransactionsScreen extends Component {
     static navigationOptions = {
@@ -49,11 +46,21 @@ class AddTransactionsScreen extends Component {
           amount: '',
           transactionType: 'expense', // income or expense, expense == default
           isRecurring: false, // default
-          category: ''
+          category: '',
+          touched: {
+            amount: false,
+            name: false,
+          }
 
       }
     }
 
+    // NEW
+    handleBlur = (field) => (evt) => {
+      this.setState({
+        touched: { ...this.state.touched, [field]: true },
+      });
+    }
    
 
     handleAmountChange = e => {
@@ -110,17 +117,22 @@ class AddTransactionsScreen extends Component {
 
     
     render() {
+      const shouldMarkError = (field) => {
+        const hasError = errors[field];
+        const shouldShow = this.state.touched[field];
 
+        return hasError ? shouldShow : false;
+      }
 
       validate = (amount, name) => {
        return {
-         amount: amount.length === 0,
-         name: name.length === 0,
+         amount: amount.length === 0, // true or false, true = HAS ERROR
+         name: name.length === 0,  // true or false false is FINE
        };
      }
 
      const errors = validate(this.state.amount, this.state.name);
-     const isEnabled = Object.keys(errors).some(x => errors[x]);
+     const isEnabled = Object.keys(errors).some(x => errors[x]); // stops checking at true
      
       return (
         <DismissKeyboard>
@@ -145,17 +157,20 @@ class AddTransactionsScreen extends Component {
                 suffixUnit: ''
                 }}
                 value={this.state.amount}
-                onChangeText={amt => {
-                  this.setState({
-                    amount: amt
-                  })
-                }}
+                // onChangeText={amt => {
+                //   this.setState({
+                //     amount: amt
+                //   })
+                // }}
                 onChange={amt => {
                   this.handleAmountChange(amt)
                 }}
+                onBlur={this.handleBlur('amount')}
                 keyboardType='numeric'
                 maxLength={10}
-                style={errors.amount ? styles.amountInputWrong : styles.amountInput} 
+                // style={errors.amount ? styles.amountInputWrong : styles.amountInput} 
+                style={shouldMarkError('amount') ? styles.amountInputWrong : styles.amountInput }
+
                 placeholder='€00.00'
                 value={this.state.amount}
               />
@@ -171,11 +186,13 @@ class AddTransactionsScreen extends Component {
             </View> 
  
             <TextInput 
-            style={errors.name ? styles.itemInputWrong : styles.itemInput} 
-            onChange={this.handleDescriptionChange} 
             maxLength={50}
             placeholder='Description e.g. washing powder'
             value={this.state.name}
+            onChange={this.handleDescriptionChange} 
+            onBlur={this.handleBlur('name')}
+            // style={errors.name ? styles.itemInputWrong : styles.itemInput} 
+            style={shouldMarkError('name') ? styles.itemInputWrong : styles.itemInput }
             />
         
         <View style={styles.textRow}>
