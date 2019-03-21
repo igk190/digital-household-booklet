@@ -113,6 +113,7 @@ class AddTransactionsScreen extends Component {
      
       return (
         <DismissKeyboard>
+        <View style={styles.upperMain}>
           <View style={styles.main}>
   
             <View style={styles.BTNcontainer}>
@@ -185,21 +186,27 @@ class AddTransactionsScreen extends Component {
             </View>
 
             <Button
-            title= {this.state.isRecurring ? 'YES' : 'NO'}
+            title= {this.state.isRecurring ? 'Yes' : 'No'}
             onPress={() => this.toggleRecurring()} 
             buttonStyle={styles.recurringBtn}
             />
         </View> 
 
-
-          {/* <Button
-            title="View Transaction List"
-            onPress ={ () => this.props.navigation.navigate('TransactionList')}
-            buttonStyle={styles.listBtn}
-            /> 
-          */}
+        
+         
+         
         </View>
-        </DismissKeyboard>
+
+        <View style={styles.listView}>
+          <Button
+              title="View Transaction List"
+              onPress ={ () => this.props.navigation.navigate('TransactionList')}
+              buttonStyle={styles.listBtn}
+              /> 
+        </View>
+
+      </View>
+      </DismissKeyboard>
       );
     }
   }
@@ -212,6 +219,9 @@ export default AddTransactionsScreen;
 
 const styles = StyleSheet.create ({
 
+    upperMain: {
+      flex: 1,
+    },
     main: {
       flex: 1/3,
       padding: 25, 
@@ -221,7 +231,7 @@ const styles = StyleSheet.create ({
     },
 
     BTNcontainer: {
-      flex: 1/4,
+      flex: 1/3,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -284,11 +294,19 @@ const styles = StyleSheet.create ({
       backgroundColor: '#DCDCDC'
     },
 
-    listBtn: {
-      flex: 1/4,
-      margin: 1,
+    listView: {
+      flex: 1,
       flexDirection: 'column',
-      alignSelf: 'flex-end'
+      justifyContent: 'flex-end',
+    },
+    listBtn: {
+      // flex: 1/4,
+      // margin: 1,
+      flexDirection: 'row',
+      padding: 20,
+      justifyContent: 'center',
+      
+
     },
 
     recurringBtn: {
