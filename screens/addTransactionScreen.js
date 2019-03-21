@@ -32,6 +32,10 @@ const DismissKeyboard = ({ children }) => (
   </TouchableWithoutFeedback>
 );
 
+
+// TRY OUT
+
+
 class AddTransactionsScreen extends Component {
     static navigationOptions = {
       title: 'Add Transaction', 
@@ -50,7 +54,7 @@ class AddTransactionsScreen extends Component {
       }
     }
 
-
+   
 
     handleAmountChange = e => {
       this.setState({
@@ -110,6 +114,11 @@ class AddTransactionsScreen extends Component {
 
     
     render() {
+
+      const { amount, name } = this.state; 
+      const isEnabled = 
+        amount.length > 0 &&
+        name.length > 0;
      
       return (
         <DismissKeyboard>
@@ -154,6 +163,7 @@ class AddTransactionsScreen extends Component {
                   buttonStyle={styles.saveBtn}
                   title="Save"
                   onPress={this.handleSubmit}
+                  disabled={!isEnabled}
               />
   
             </View> 
@@ -273,7 +283,7 @@ const styles = StyleSheet.create ({
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 5
+      marginBottom: 5,
     },
 
      btnsRow: {
@@ -302,6 +312,7 @@ const styles = StyleSheet.create ({
     listBtn: {
       // flex: 1/4,
       // margin: 1,
+      backgroundColor: '#00aeef',
       flexDirection: 'row',
       padding: 20,
       justifyContent: 'center',
