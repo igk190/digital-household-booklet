@@ -111,7 +111,11 @@ class AddTransactionsScreen extends Component {
         name: '',
         amount: '',
         isRecurring: false,
-        transactionType: 'expense'
+        transactionType: 'expense',
+        touched: {
+          amount: false,
+          name: false,
+        }
       })
     }
 
