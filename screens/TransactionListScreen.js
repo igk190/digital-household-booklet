@@ -41,7 +41,7 @@ class TransactionListScreen extends Component {
     }
     
     componentWillUnmount(){  //new
-      this.state.isMounted = false
+      this.state.isMounted = false  // equals char??
     }
 
     render() {

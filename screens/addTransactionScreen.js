@@ -11,6 +11,7 @@ import {
 import { Button } from 'react-native-elements';
 
 import { TextInputMask } from 'react-native-masked-text';
+import { MaskService } from 'react-native-masked-text'; // TRY ThIS 
 // import styles from '../styles/styles';
 
 import { db } from '../src/config';
@@ -62,12 +63,13 @@ class AddTransactionsScreen extends Component {
       });
     }
    
-
-    handleAmountChange = e => {
+    handleAmountChange = text => {
       this.setState({
-        amount: e.nativeEvent.text   
-      });
-    };
+        amount: text
+      })
+    } 
+
+
     handleDescriptionChange = e => {
       this.setState({
         name: e.nativeEvent.text   
@@ -151,12 +153,11 @@ class AddTransactionsScreen extends Component {
                   onPress={() => this.props.navigation.navigate('Home')} // what about stuff typed in fields already?
               />
 
-              <TextInputMask
+              {/* <TextInputMask
                 type={'money'}
                 options={{
                   precision: 2,
-                  separator: ',',
-                  delimiter: '.',
+                
                   unit: '€',
                   suffixUnit: ''
                 }}
@@ -172,7 +173,19 @@ class AddTransactionsScreen extends Component {
                 
                 placeholder='€00.00'
                 value={this.state.amount}
-              />
+              /> */}
+                <TextInputMask
+                  type={'money'}
+                  options={{
+                    unit: '€'
+                  }}
+                  value={this.state.amount}
+                  onChangeText={this.handleAmountChange}
+                  keyboardType='numeric'
+                  style={shouldMarkError('amount') ? styles.amountInputWrong : styles.amountInput }
+                  placeholder='€00.00'
+                  onBlur={this.handleBlur('amount')}
+                />
       
           
               <Button
