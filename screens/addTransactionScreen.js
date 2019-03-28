@@ -137,7 +137,7 @@ class AddTransactionsScreen extends Component {
 
      const errors = validate(this.state.amount, this.state.name);
      const isEnabled = Object.keys(errors).some(x => errors[x]); // stops checking at true
-     
+    
       return (
         <DismissKeyboard>
         <View style={styles.upperMain}>
@@ -154,27 +154,22 @@ class AddTransactionsScreen extends Component {
               <TextInputMask
                 type={'money'}
                 options={{
-                precision: 2,
-                separator: ',',
-                delimiter: '.',
-                unit: '€',
-                suffixUnit: ''
+                  precision: 2,
+                  separator: ',',
+                  delimiter: '.',
+                  unit: '€',
+                  suffixUnit: ''
                 }}
+              
                 value={this.state.amount}
-                // onChangeText={amt => {
-                //   this.setState({
-                //     amount: amt
-                //   })
-                // }}
                 onChange={amt => {
                   this.handleAmountChange(amt)
                 }}
                 onBlur={this.handleBlur('amount')}
                 keyboardType='numeric'
                 maxLength={10}
-                // style={errors.amount ? styles.amountInputWrong : styles.amountInput} 
                 style={shouldMarkError('amount') ? styles.amountInputWrong : styles.amountInput }
-
+                
                 placeholder='€00.00'
                 value={this.state.amount}
               />
@@ -193,6 +188,7 @@ class AddTransactionsScreen extends Component {
             maxLength={50}
             placeholder='Description e.g. washing powder'
             value={this.state.name}
+      
             onChange={this.handleDescriptionChange} 
             onBlur={this.handleBlur('name')}
             // style={errors.name ? styles.itemInputWrong : styles.itemInput} 
@@ -243,7 +239,7 @@ class AddTransactionsScreen extends Component {
       );
     }
   }
-  
+    
 
 export default AddTransactionsScreen;
 

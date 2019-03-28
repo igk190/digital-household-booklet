@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 15615,
-  "expoServerNgrokUrl": "https://8u-86k.gkleijnen.digital-household-booklet.exp.direct",
-  "packagerNgrokUrl": "https://packager.8u-86k.gkleijnen.digital-household-booklet.exp.direct",
-  "ngrokPid": 15632,
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "webpackServerPort": null
 }
