@@ -67,12 +67,14 @@ class AddTransactionsScreen extends Component {
       this.setState({
         amount: text
       })
+      console.log(this.state.amount)
     } 
 
 
     handleDescriptionChange = e => {
+      console.log(e)
       this.setState({
-        name: e.nativeEvent.text   
+        name: e   
       });
     };
 
@@ -132,7 +134,7 @@ class AddTransactionsScreen extends Component {
 
       validate = (amount, name) => {
        return {
-         amount: amount.length === 0, // true or false, true = HAS ERROR
+         amount: amount.length === 0 || amount === '€0,00', // true or false, true = HAS ERROR
          name: name.length === 0,  // true or false false is FINE
        };
      }
@@ -202,7 +204,7 @@ class AddTransactionsScreen extends Component {
             placeholder='Description e.g. washing powder'
             value={this.state.name}
       
-            onChange={this.handleDescriptionChange} 
+            onChangeText={this.handleDescriptionChange} 
             onBlur={this.handleBlur('name')}
             // style={errors.name ? styles.itemInputWrong : styles.itemInput} 
             style={shouldMarkError('name') ? styles.itemInputWrong : styles.itemInput }
