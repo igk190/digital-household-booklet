@@ -23,10 +23,12 @@ let addTransaction = transaction => {
     name: transaction.name,
     amount: transaction.amount,
     isRecurring: transaction.isRecurring,
-    transactionType: transaction.transactionType
+    transactionType: transaction.transactionType,
+    date: transaction.date
   });
   // console.log(transaction, "dfsf") // what R u 
 };
+
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -51,8 +53,9 @@ class AddTransactionsScreen extends Component {
           touched: {
             amount: false,
             name: false,
-          }
-
+          },
+          date: ''
+          
       }
     }
 
@@ -71,10 +74,10 @@ class AddTransactionsScreen extends Component {
     } 
 
 
-    handleDescriptionChange = e => {
-      console.log(e)
+    handleDescriptionChange = text => {
+      console.log(text)
       this.setState({
-        name: e   
+        name: text   
       });
     };
 
@@ -104,6 +107,15 @@ class AddTransactionsScreen extends Component {
         transactionType: 'income'
       })
     }
+
+    componentDidMount() {
+      let date = new Date().getDate(); //Current Date
+      var month = new Date().getMonth() + 1; //Current Month
+      var year = new Date().getFullYear(); //Current Year
+      this.setState({
+        date: date + '/' + month + '/' + year
+      })
+    }
     
     handleSubmit = () => {
       addTransaction(this.state); // this first THEN submitclear needed?
@@ -119,7 +131,8 @@ class AddTransactionsScreen extends Component {
         touched: {
           amount: false,
           name: false,
-        }
+        },
+        date: ''
       })
     }
 
@@ -142,6 +155,8 @@ class AddTransactionsScreen extends Component {
      const errors = validate(this.state.amount, this.state.name);
      const isEnabled = Object.keys(errors).some(x => errors[x]); // stops checking at true
     
+
+
       return (
         <DismissKeyboard>
         <View style={styles.upperMain}>
@@ -155,27 +170,6 @@ class AddTransactionsScreen extends Component {
                   onPress={() => this.props.navigation.navigate('Home')} // what about stuff typed in fields already?
               />
 
-              {/* <TextInputMask
-                type={'money'}
-                options={{
-                  precision: 2,
-                
-                  unit: '€',
-                  suffixUnit: ''
-                }}
-              
-                value={this.state.amount}
-                onChange={amt => {
-                  this.handleAmountChange(amt)
-                }}
-                onBlur={this.handleBlur('amount')}
-                keyboardType='numeric'
-                maxLength={10}
-                style={shouldMarkError('amount') ? styles.amountInputWrong : styles.amountInput }
-                
-                placeholder='€00.00'
-                value={this.state.amount}
-              /> */}
                 <TextInputMask
                   type={'money'}
                   options={{
