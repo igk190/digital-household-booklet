@@ -11,7 +11,6 @@ import {
 import { Button } from 'react-native-elements';
 
 import { TextInputMask } from 'react-native-masked-text';
-import { MaskService } from 'react-native-masked-text'; // TRY ThIS 
 // import styles from '../styles/styles';
 
 import { db } from '../src/config';
@@ -54,12 +53,15 @@ class AddTransactionsScreen extends Component {
             amount: false,
             name: false,
           },
-          date: ''
+          date: '',
+          wasSaved: false
           
       }
     }
 
     // NEW
+
+    
     handleBlur = (field) => (evt) => {
       this.setState({
         touched: { ...this.state.touched, [field]: true },
@@ -70,12 +72,11 @@ class AddTransactionsScreen extends Component {
       this.setState({
         amount: text
       })
-      console.log(this.state.amount)
+      console.log('HANDLE AMT CHANGE', this.state.amount)
     } 
 
-
     handleDescriptionChange = text => {
-      console.log(text)
+      console.log('HANDKE DESC CHANGE', text)
       this.setState({
         name: text   
       });
@@ -90,9 +91,7 @@ class AddTransactionsScreen extends Component {
         console.log(this.state.isRecurring)
       }
       )
-      // console.log(this.state.isRecurring)
     }
-
    
     toggleExpenseBtn = () => {
       this.setState({
@@ -132,30 +131,53 @@ class AddTransactionsScreen extends Component {
           amount: false,
           name: false,
         },
-        date: ''
+        date: '',
+        wasSaved: true
       })
     }
 
-    
-    render() {
-      const shouldMarkError = (field) => {
-        const hasError = errors[field];
-        const shouldShow = this.state.touched[field];
-
-        return hasError ? shouldShow : false;
-      }
-
-      validate = (amount, name) => {
-       return {
-         amount: amount.length === 0 || amount === '€0,00', // true or false, true = HAS ERROR
-         name: name.length === 0,  // true or false false is FINE
-       };
+    //////////////////////////////////////
+     amountInfoComplete = () => {
+       const amt = this.state.amount.length > 0 || this.state.amount != '€0,00'; // all good if TRUE
+       return amt ? true : false; 
      }
+     descriptionInfoComplete = () => {
+      const desc = this.state.name.length > 0; // all good if TRUE
+      return desc ? true : false; 
+    }
 
-     const errors = validate(this.state.amount, this.state.name);
-     const isEnabled = Object.keys(errors).some(x => errors[x]); // stops checking at true
-    
+    ///////
 
+     shouldMarkError = (field) => {
+      if (this.state.wasSaved === true) {
+          this.setState({
+            wasSaved: false
+          })
+          return false 
+      } else {
+        const hasError = errors[field]; // if either is empty, return bool, hasERror = true
+        const shouldShow = this.state.touched[field]; // default false. shouldshowWHAT?
+          return hasError ? shouldShow : false;
+        }
+    }
+
+  //   validate = (amount, name) => {
+  //     console.log('AMT', amount, ' NAME ', name)
+  //    return {
+  //      amount: amount.length === 0 || amount === '€0,00', // true or false, true = HAS ERROR
+  //      name: name.length === 0,  // true or false false is FINE
+  //    };
+  //  }
+
+  //   errors = validate(this.state.amount, this.state.name);
+  
+    // isEnabled = Object.keys(errors).some(x => errors[x]); // stops checking at true
+  
+
+  
+
+ 
+    render() {
 
       return (
         <DismissKeyboard>
@@ -178,7 +200,8 @@ class AddTransactionsScreen extends Component {
                   value={this.state.amount}
                   onChangeText={this.handleAmountChange}
                   keyboardType='numeric'
-                  style={shouldMarkError('amount') ? styles.amountInputWrong : styles.amountInput }
+                  // style={shouldMarkError('amount') ? styles.amountInputWrong : styles.amountInput }
+                  style={this.amountInfoComplete() ? styles.amountInput : amountInputWrong}
                   placeholder='€00.00'
                   onBlur={this.handleBlur('amount')}
                 />
@@ -188,7 +211,7 @@ class AddTransactionsScreen extends Component {
                   buttonStyle={styles.saveBtn}
                   title="Save"
                   onPress={this.handleSubmit}
-                  disabled={isEnabled}
+                  disabled={this.isEnabled} // this.state.saveBtnEnabled = false
               />
   
             </View> 
@@ -201,7 +224,7 @@ class AddTransactionsScreen extends Component {
             onChangeText={this.handleDescriptionChange} 
             onBlur={this.handleBlur('name')}
             // style={errors.name ? styles.itemInputWrong : styles.itemInput} 
-            style={shouldMarkError('name') ? styles.itemInputWrong : styles.itemInput }
+            style={this.descriptionInfoComplete() ? styles.itemInput : styles.itemInputWrong }
             />
         
         <View style={styles.textRow}>
