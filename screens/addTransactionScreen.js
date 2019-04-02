@@ -49,12 +49,14 @@ class AddTransactionsScreen extends Component {
           transactionType: 'expense', // income or expense, expense == default
           isRecurring: false, // default
           category: '',
+          amtTouched: false,
+          descTouched: false,
           touched: {
-            amount: false,
             name: false,
+            amount: false,
           },
           date: '',
-          wasSaved: false
+          wasSaved: false,
           
       }
     }
@@ -63,22 +65,27 @@ class AddTransactionsScreen extends Component {
 
     
     handleBlur = (field) => (evt) => {
+     console.log('I AM AMOUNT', this.state.amount)
       this.setState({
         touched: { ...this.state.touched, [field]: true },
+      }, () => {
+        console.log('STATE AFTR', this.state.touched);
       });
+      
     }
-   
-    handleAmountChange = text => {
-      this.setState({
-        amount: text
-      })
-      console.log('HANDLE AMT CHANGE', this.state.amount)
-    } 
 
     handleDescriptionChange = text => {
-      console.log('HANDKE DESC CHANGE', text)
+      // console.log('HANDKE DESC CHANGE', text)
       this.setState({
         name: text   
+      });
+    };
+
+
+    handleAmountChange = text => {
+      // console.log('HANDKE DESC CHANGE', text)
+      this.setState({
+        amount: text   
       });
     };
 
@@ -137,44 +144,70 @@ class AddTransactionsScreen extends Component {
     }
 
     //////////////////////////////////////
-     amountInfoComplete = () => {
-       const amt = this.state.amount.length > 0 || this.state.amount != '€0,00'; // all good if TRUE
-       return amt ? true : false; 
+    amountInfoComplete = () => {
+       const isAmtCompleted = this.state.amount.length === 0 || this.state.amount === '€0,00' ; 
+
+       return !isAmtCompleted; 
      }
-     descriptionInfoComplete = () => {
-      const desc = this.state.name.length > 0; // all good if TRUE
-      return desc ? true : false; 
+     shouldShowError = () => {
+       console.log('AMT LENGTH', this.state.amount.length)
+       const isAmountCompleted = this.amountInfoComplete();
+       const isAmountTouched = this.state.touched.amount;
+       console.log('AMT INF COMPL', isAmountCompleted)
+       console.log('TOUCHED??', isAmountTouched)
+       let showError = false;
+
+       if ((isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
+          showError = false;
+       } 
+        else {
+          showError = true;
+       }
+       return showError;
+     }
+    //  1. We get into the app:
+    //  isAmtCompleted -> false
+    //  isTouched --> false
+    //  --> not error
+     
+    //  2. We get into the input for the first time and we left without texting anything
+    //  sAmtCompleted -> false
+    //  isTouched --> true
+    //  -->  error
+     
+    //  3. We get into the input for the first time, we write and we left
+    //  sAmtCompleted -> true
+    //  isTouched --> true
+    //  --> not error
+
+    descriptionInfoComplete = () => {
+      const desc = this.state.name.length === 0; // all good if TRUE
+      return desc ? false : true; 
+    }
+
+    isEnabled = () => {
+      const amtInfCompl = this.amountInfoComplete();
+      const descInfCompl = this.descriptionInfoComplete();
+
+      const shouldBeEnabled = amtInfCompl && descInfCompl;
+      return shouldBeEnabled ?  false : true; 
     }
 
     ///////
 
-     shouldMarkError = (field) => {
-      if (this.state.wasSaved === true) {
-          this.setState({
-            wasSaved: false
-          })
-          return false 
-      } else {
-        const hasError = errors[field]; // if either is empty, return bool, hasERror = true
-        const shouldShow = this.state.touched[field]; // default false. shouldshowWHAT?
-          return hasError ? shouldShow : false;
-        }
-    }
+    //  shouldMarkError = (field) => {
+    //   if (this.state.wasSaved === true) {
+    //       this.setState({
+    //         wasSaved: false
+    //       })
+    //       return false 
+    //   } else {
+    //     const hasError = errors[field]; // if either is empty, return bool, hasERror = true
+    //     const shouldShow = this.state.touched[field]; // default false. shouldshowWHAT?
+    //       return hasError ? shouldShow : false;
+    //     }
+    // }
 
-  //   validate = (amount, name) => {
-  //     console.log('AMT', amount, ' NAME ', name)
-  //    return {
-  //      amount: amount.length === 0 || amount === '€0,00', // true or false, true = HAS ERROR
-  //      name: name.length === 0,  // true or false false is FINE
-  //    };
-  //  }
-
-  //   errors = validate(this.state.amount, this.state.name);
-  
-    // isEnabled = Object.keys(errors).some(x => errors[x]); // stops checking at true
-  
-
-  
 
  
     render() {
@@ -198,10 +231,9 @@ class AddTransactionsScreen extends Component {
                     unit: '€'
                   }}
                   value={this.state.amount}
-                  onChangeText={this.handleAmountChange}
+                  onChangeText={this.handleAmountChange} // update state on every keypress
                   keyboardType='numeric'
-                  // style={shouldMarkError('amount') ? styles.amountInputWrong : styles.amountInput }
-                  style={this.amountInfoComplete() ? styles.amountInput : amountInputWrong}
+                  style={this.shouldShowError() ? styles.amountInputWrong : styles.amountInput}
                   placeholder='€00.00'
                   onBlur={this.handleBlur('amount')}
                 />
@@ -211,7 +243,7 @@ class AddTransactionsScreen extends Component {
                   buttonStyle={styles.saveBtn}
                   title="Save"
                   onPress={this.handleSubmit}
-                  disabled={this.isEnabled} // this.state.saveBtnEnabled = false
+                  disabled={this.isEnabled()} // this.state.saveBtnEnabled = false
               />
   
             </View> 
