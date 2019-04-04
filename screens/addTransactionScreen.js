@@ -6,6 +6,7 @@ import {
   TextInput,
   AlertIOS,
   StyleSheet,
+  FlatList,
   TouchableWithoutFeedback
 } from 'react-native';
 import { Button } from 'react-native-elements';
@@ -61,29 +62,24 @@ class AddTransactionsScreen extends Component {
       }
     }
 
-    // NEW
-
     
     handleBlur = (field) => (evt) => {
-     console.log('I AM AMOUNT', this.state.amount)
       this.setState({
         touched: { ...this.state.touched, [field]: true },
       }, () => {
         console.log('STATE AFTR', this.state.touched);
       });
-      
     }
 
     handleDescriptionChange = text => {
-      // console.log('HANDKE DESC CHANGE', text)
+      // console.log('HANDLE DESC CHANGE', text)
       this.setState({
         name: text   
       });
     };
 
-
     handleAmountChange = text => {
-      // console.log('HANDKE DESC CHANGE', text)
+      // console.log('HANDLE DESC CHANGE', text)
       this.setState({
         amount: text   
       });
@@ -96,8 +92,7 @@ class AddTransactionsScreen extends Component {
       }),
       () => {
         console.log(this.state.isRecurring)
-      }
-      )
+      })
     }
    
     toggleExpenseBtn = () => {
@@ -105,7 +100,6 @@ class AddTransactionsScreen extends Component {
         transactionType: 'expense'
       })
       console.log('bye monnie')
-
     }
     toggleIncomeBtn = () => {
       console.log('rich bish')
@@ -145,16 +139,16 @@ class AddTransactionsScreen extends Component {
 
     //////////////////////////////////////
     amountInfoComplete = () => {
-       const isAmtCompleted = this.state.amount.length === 0 || this.state.amount === '€0,00' ; 
-
-       return !isAmtCompleted; 
+       const isAmtCompleted = this.state.amount !== null ||this.state.amount.length > 0 || this.state.amount !== '€0,00' ; 
+       console.log('isamountComplete', isAmtCompleted)
+       return isAmtCompleted;  // returns false on 1st turn SHOULD RETURN FALSE
      }
-     shouldShowError = () => {
-       console.log('AMT LENGTH', this.state.amount.length)
+     shouldShowError = () => { // if true, show errow
        const isAmountCompleted = this.amountInfoComplete();
        const isAmountTouched = this.state.touched.amount;
        console.log('AMT INF COMPL', isAmountCompleted)
        console.log('TOUCHED??', isAmountTouched)
+
        let showError = false;
 
        if ((isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
@@ -165,21 +159,19 @@ class AddTransactionsScreen extends Component {
        }
        return showError;
      }
-    //  1. We get into the app:
-    //  isAmtCompleted -> false
-    //  isTouched --> false
-    //  --> not error
-     
-    //  2. We get into the input for the first time and we left without texting anything
-    //  sAmtCompleted -> false
-    //  isTouched --> true
-    //  -->  error
-     
-    //  3. We get into the input for the first time, we write and we left
-    //  sAmtCompleted -> true
-    //  isTouched --> true
-    //  --> not error
 
+     // 1. we go into the app. AmtTouched = false
+     // amountComplete = false. should show NO ERROR   ✓
+     
+     // 2. we go into amountInput, but don't type anything. Then we go
+     //out of the field. AmtTouched = true, amountComplete = false.
+     // Should SHOW ERROR
+     // 3. we go into amountInput, we type sth. but delete everything again.
+     // AmountTouched = true, amountComplete = False. Should SHOW ERROR
+
+     // 4. we go into amtInput, we type sth. We focus out. 
+     // amountTouched = true, amountComplete = true. Shoul show NO ERROR
+    
     descriptionInfoComplete = () => {
       const desc = this.state.name.length === 0; // all good if TRUE
       return desc ? false : true; 
@@ -193,25 +185,12 @@ class AddTransactionsScreen extends Component {
       return shouldBeEnabled ?  false : true; 
     }
 
-    ///////
-
-    //  shouldMarkError = (field) => {
-    //   if (this.state.wasSaved === true) {
-    //       this.setState({
-    //         wasSaved: false
-    //       })
-    //       return false 
-    //   } else {
-    //     const hasError = errors[field]; // if either is empty, return bool, hasERror = true
-    //     const shouldShow = this.state.touched[field]; // default false. shouldshowWHAT?
-    //       return hasError ? shouldShow : false;
-    //     }
-    // }
-
+      
+   
+  
 
  
     render() {
-
       return (
         <DismissKeyboard>
         <View style={styles.upperMain}>
@@ -283,11 +262,17 @@ class AddTransactionsScreen extends Component {
             onPress={() => this.toggleRecurring()} 
             buttonStyle={styles.recurringBtn}
             />
-        </View> 
+          </View> 
+        </View>
 
-        
-         
-         
+      
+        <View style={styles.categories}>
+          
+          <FlatList
+            data={[{key: 'a'}, {key: 'b'}]}
+            renderItem={({item}) => <Text>{item.key}</Text>}
+          />
+
         </View>
 
         <View style={styles.listView}>
@@ -314,9 +299,11 @@ const styles = StyleSheet.create ({
 
     upperMain: {
       flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-between',
     },
     main: {
-      flex: 1/3,
+      flex: 1,
       padding: 25, 
       flexDirection: 'column',
       justifyContent: 'center',
@@ -425,22 +412,19 @@ const styles = StyleSheet.create ({
       borderRadius: 5,
       marginTop: 10,
       marginBottom: 10,
+    },
+
+    categories: {
+      backgroundColor: 'green',
+      flex: 1.6,
+      flexDirection: 'row',
+      // padding: 25, 
+      justifyContent: 'space-between'
+   
     }
 
-    
 
-
-
-
-
-
-    // buttonText: {
-    //   fontSize: 18,
-    //   color: 'white',
-    //   alignSelf: 'center'
-    // },
-   
-    
+ 
   
     
     
