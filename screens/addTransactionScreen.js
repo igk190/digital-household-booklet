@@ -47,8 +47,19 @@ const categories= [
   {key: 'O'},
   {key: 'P'},
   {key: 'Q'},
-]
+];
 const numColumns = 4;
+
+const formatCategories = (categories, numColumns) => {
+  const numberOfFullRows = Math.floor(categories.length / numColumns); // math.floor rounds down
+
+  let numberOfElementsLastRow = categories.length - (numberOfFullRows * numColumns);
+  while (numberOfElementsLastRow !== numColumns && numberOfElementsLastRow !== 0) {
+    categories.push({ key: `blank-${numberOfElementsLastRow}`, empty: true});
+    numberOfElementsLastRow = numberOfElementsLastRow+  1;
+  }
+  return categories;
+}
 
 
 const DismissKeyboard = ({ children }) => (
@@ -85,11 +96,14 @@ class AddTransactionsScreen extends Component {
     }
 
     renderItem = ({ item, index }) => {
+      if (item.empty === true) {
+        return <View style={[styles.categoryItem, styles.categoryItemInvisible]} />;
+      }
       return (
         <View
         style={styles.categoryItem}
         >
-          <Text style={styles.itemText}>{item.key}</Text>
+          <Text style={styles.categoryItemText}>{item.key}</Text>
         </View>
       );
     };
@@ -300,7 +314,7 @@ class AddTransactionsScreen extends Component {
       
         <View style={styles.categoriesView}>
           <FlatList
-            data={categories}
+            data={formatCategories(categories, numColumns)}
             style={styles.categoriesContainer}
             renderItem={this.renderItem}
             numColumns={numColumns}
@@ -447,7 +461,7 @@ const styles = StyleSheet.create ({
     },
 
     categoriesView: {
-      backgroundColor: 'green',
+      backgroundColor: '#FFCCE5',
       flex: 1.6,
       flexDirection: 'row',
       // padding: 25, 
@@ -458,7 +472,7 @@ const styles = StyleSheet.create ({
       marginVertical: 20,
     },
     categoryItem: {
-      backgroundColor: '#4D243D',
+      backgroundColor: '#FF66B2',
       alignItems: 'center',
       justifyContent: 'center',
       flex: 1,
@@ -466,7 +480,10 @@ const styles = StyleSheet.create ({
       height: 40
       // height: Dimensions.get('window').width / numColumns, // approximate a square
     },
-    itemText: {
+    categoryItemInvisible: {
+      backgroundColor: 'transparent',
+    },
+    categoryItemText: {
       color: '#fff',
     },
 
