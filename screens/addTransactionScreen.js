@@ -29,12 +29,35 @@ let addTransaction = transaction => {
   // console.log(transaction, "dfsf") // what R u 
 };
 
+const categories= [
+  {key: 'A'},
+  {key: 'B'},
+  {key: 'C'},
+  {key: 'D'},
+  {key: 'E'},
+  {key: 'F'},
+  {key: 'G'},
+  {key: 'H'},
+  {key: 'I'},
+  {key: 'J'},
+  {key: 'K'},
+  {key: 'L'},
+  {key: 'M'},
+  {key: 'N'},
+  {key: 'O'},
+  {key: 'P'},
+  {key: 'Q'},
+]
+const numColumns = 4;
+
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     { children}
   </TouchableWithoutFeedback>
 );
+
+
 
 class AddTransactionsScreen extends Component {
     static navigationOptions = {
@@ -57,10 +80,19 @@ class AddTransactionsScreen extends Component {
             amount: false,
           },
           date: '',
-          wasSaved: false,
-          
+          wasSaved: false,  
       }
     }
+
+    renderItem = ({ item, index }) => {
+      return (
+        <View
+        style={styles.categoryItem}
+        >
+          <Text style={styles.itemText}>{item.key}</Text>
+        </View>
+      );
+    };
 
     
     handleBlur = (field) => (evt) => {
@@ -266,13 +298,13 @@ class AddTransactionsScreen extends Component {
         </View>
 
       
-        <View style={styles.categories}>
-          
+        <View style={styles.categoriesView}>
           <FlatList
-            data={[{key: 'a'}, {key: 'b'}]}
-            renderItem={({item}) => <Text>{item.key}</Text>}
+            data={categories}
+            style={styles.categoriesContainer}
+            renderItem={this.renderItem}
+            numColumns={numColumns}
           />
-
         </View>
 
         <View style={styles.listView}>
@@ -414,14 +446,29 @@ const styles = StyleSheet.create ({
       marginBottom: 10,
     },
 
-    categories: {
+    categoriesView: {
       backgroundColor: 'green',
       flex: 1.6,
       flexDirection: 'row',
       // padding: 25, 
       justifyContent: 'space-between'
-   
-    }
+    },
+    categoriesContainer: {
+      flex: 1,
+      marginVertical: 20,
+    },
+    categoryItem: {
+      backgroundColor: '#4D243D',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      margin: 1,
+      height: 40
+      // height: Dimensions.get('window').width / numColumns, // approximate a square
+    },
+    itemText: {
+      color: '#fff',
+    },
 
 
  
