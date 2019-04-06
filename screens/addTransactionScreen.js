@@ -6,6 +6,7 @@ import {
   TextInput,
   AlertIOS,
   StyleSheet,
+  TouchableOpacity,
   FlatList,
   TouchableWithoutFeedback
 } from 'react-native';
@@ -40,13 +41,7 @@ const expenseCategories = [
   {key: 'H'},
   {key: 'I'},
   {key: 'J'},
-  {key: 'K'},
-  {key: 'L'},
-  {key: 'M'},
-  {key: 'N'},
-  {key: 'O'},
-  {key: 'P'},
-  {key: 'Q'},
+  {key: 'K'} 
 ];
 const incomeCategories = [
   {key: 'a'},
@@ -108,13 +103,26 @@ class AddTransactionsScreen extends Component {
         return <View style={[styles.categoryItem, styles.categoryItemInvisible]} />;
       }
       return (
-        <View
-        style={styles.categoryItem}
-        >
-          <Text style={styles.categoryItemText}>{item.key}</Text>
+        <View style={styles.categoryItem}>
+          <TouchableOpacity buttonStyle={styles.categoryItemBtn}
+          onPress={() => { this.saveCategoryToState(item.key)}}
+          // title={item.key}
+          >  
+            <Text>{item.key}</Text>           
+          </TouchableOpacity>
         </View>
       );
     };
+
+    saveCategoryToState = (item) => {
+      // console.log('ITEM', item)
+      this.setState({
+        category: item
+      },
+      () => {
+        console.log('FLDDSKFFJDSFSD', this.state.category)
+      })
+    }
 
     
     handleBlur = (field) => (evt) => {
@@ -187,21 +195,21 @@ class AddTransactionsScreen extends Component {
           name: false,
         },
         date: '',
-        wasSaved: true
+        wasSaved: true,
       })
     }
 
     //////////////////////////////////////
     amountInfoComplete = () => {
        const isAmtCompleted = this.state.amount !== null ||this.state.amount.length > 0 || this.state.amount !== '€0,00' ; 
-       console.log('isamountComplete', isAmtCompleted)
+      //  console.log('isamountComplete', isAmtCompleted)
        return isAmtCompleted;  // returns false on 1st turn SHOULD RETURN FALSE
      }
      shouldShowError = () => { // if true, show errow
        const isAmountCompleted = this.amountInfoComplete();
        const isAmountTouched = this.state.touched.amount;
-       console.log('AMT INF COMPL', isAmountCompleted)
-       console.log('TOUCHED??', isAmountTouched)
+      //  console.log('AMT INF COMPL', isAmountCompleted)
+      //  console.log('TOUCHED??', isAmountTouched)
 
        let showError = false;
 
@@ -491,20 +499,26 @@ const styles = StyleSheet.create ({
       marginVertical: 20,
     },
     categoryItem: {
-      backgroundColor: '#FF66B2',
+      backgroundColor: '#FF66B2', // darkpink
+
       alignItems: 'center',
       justifyContent: 'center',
       flex: 1,
       margin: 1,
-      height: 40
+      height: 40,
+      width: '100%',
+      padding: 0,
       // height: Dimensions.get('window').width / numColumns, // approximate a square
     },
     categoryItemInvisible: {
       backgroundColor: 'transparent',
     },
-    categoryItemText: {
-      color: '#fff',
-    },
+    categoryItemBtn: {
+      width: '100%',
+    }
+    // categoryItemBtn: {
+    //   width: '100%'
+    // }
 
 
  
