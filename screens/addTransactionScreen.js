@@ -9,7 +9,7 @@ import {
   FlatList,
   TouchableWithoutFeedback
 } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 
 import { TextInputMask } from 'react-native-masked-text';
 // import styles from '../styles/styles';
@@ -29,8 +29,8 @@ let addTransaction = transaction => {
   // console.log(transaction, "dfsf") // what R u 
 };
 
-const categories= [
-  {key: 'A'},
+const expenseCategories = [
+  {key: 'a'},
   {key: 'B'},
   {key: 'C'},
   {key: 'D'},
@@ -47,6 +47,14 @@ const categories= [
   {key: 'O'},
   {key: 'P'},
   {key: 'Q'},
+];
+const incomeCategories = [
+  {key: 'a'},
+  {key: 'B'},
+  {key: 'C'},
+  {key: 'D'},
+  {key: 'E'},
+  {key: 'F'},
 ];
 const numColumns = 4;
 
@@ -231,6 +239,16 @@ class AddTransactionsScreen extends Component {
       return shouldBeEnabled ?  false : true; 
     }
 
+    checkTransactionType = () => {
+      if (this.state.transactionType === 'expense') {
+        console.log('am i getting here')
+        return expenseCategories
+      } else {
+        return incomeCategories
+      }
+      }
+    
+
       
    
   
@@ -314,12 +332,13 @@ class AddTransactionsScreen extends Component {
       
         <View style={styles.categoriesView}>
           <FlatList
-            data={formatCategories(categories, numColumns)}
+            data={formatCategories(this.checkTransactionType(), numColumns)}
             style={styles.categoriesContainer}
             renderItem={this.renderItem}
             numColumns={numColumns}
           />
         </View>
+        
 
         <View style={styles.listView}>
           <Button
