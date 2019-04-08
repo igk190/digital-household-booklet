@@ -25,31 +25,33 @@ let addTransaction = transaction => {
     amount: transaction.amount,
     isRecurring: transaction.isRecurring,
     transactionType: transaction.transactionType,
-    date: transaction.date
+    date: transaction.date,
+    category: transaction.category
   });
   // console.log(transaction, "dfsf") // what R u 
 };
 
 const expenseCategories = [
-  {key: 'a'},
-  {key: 'B'},
-  {key: 'C'},
-  {key: 'D'},
-  {key: 'E'},
-  {key: 'F'},
-  {key: 'G'},
-  {key: 'H'},
-  {key: 'I'},
-  {key: 'J'},
-  {key: 'K'} 
+  {key: 'Eating out'},
+  {key: 'Education'},
+  {key: 'Electronics'},
+  {key: 'Clothes'},
+  {key: 'Food'},
+  {key: 'General'},
+  {key: 'Leisure'},
+  {key: 'Medical'},
+  {key: 'Toiletries'},
+  {key: 'Transport'},
+  {key: 'Travel'},
+  {key: 'Other'} 
 ];
 const incomeCategories = [
-  {key: 'a'},
-  {key: 'B'},
-  {key: 'C'},
-  {key: 'D'},
-  {key: 'E'},
-  {key: 'F'},
+  {key: 'Salary'},
+  {key: 'Gifts'},
+  {key: 'Interest'},
+  {key: 'Investments'},
+  {key: 'Sales'},
+  {key: 'Social sec.'}, 
 ];
 const numColumns = 4;
 
@@ -95,6 +97,7 @@ class AddTransactionsScreen extends Component {
           },
           date: '',
           wasSaved: false,  
+          selectedItem: null
       }
     }
 
@@ -102,10 +105,13 @@ class AddTransactionsScreen extends Component {
       if (item.empty === true) {
         return <View style={[styles.categoryItem, styles.categoryItemInvisible]} />;
       }
+      // style={this.shouldShowError() ? styles.amountInputWrong : styles.amountInput}
+      // this.state.category === item.key ? 
       return (
-        <View style={styles.categoryItem}>
-          <TouchableOpacity buttonStyle={styles.categoryItemBtn}
-          onPress={() => { this.saveCategoryToState(item.key)}}
+        <View style={this.state.category === item.key ? styles.categoryItemActive: styles.categoryItem}>
+          <TouchableOpacity style={styles.categoryItemBtn}
+          activeOpacity={0.1}
+          onPress={() => { this.selectCategory(item.key)}}
           // title={item.key}
           >  
             <Text>{item.key}</Text>           
@@ -114,8 +120,10 @@ class AddTransactionsScreen extends Component {
       );
     };
 
-    saveCategoryToState = (item) => {
-      // console.log('ITEM', item)
+    selectCategory = (item) => {
+      // clear background color of all other categories
+      // el with onpress: give this one new color / bold text whtvr
+      console.log(item)
       this.setState({
         category: item
       },
@@ -196,6 +204,7 @@ class AddTransactionsScreen extends Component {
         },
         date: '',
         wasSaved: true,
+        category: ''
       })
     }
 
@@ -254,12 +263,7 @@ class AddTransactionsScreen extends Component {
       } else {
         return incomeCategories
       }
-      }
-    
-
-      
-   
-  
+    }
 
  
     render() {
@@ -344,6 +348,8 @@ class AddTransactionsScreen extends Component {
             style={styles.categoriesContainer}
             renderItem={this.renderItem}
             numColumns={numColumns}
+            extraData={this.state}
+           
           />
         </View>
         
@@ -515,7 +521,24 @@ const styles = StyleSheet.create ({
     },
     categoryItemBtn: {
       width: '100%',
+      alignItems: 'center'
+    },
+    categoryItemActive: {
+      backgroundColor: 'black', // darkpink
+
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+      margin: 1,
+      height: 40,
+      width: '100%',
+      padding: 0,
     }
+    // categoryItemBtnActive: {
+    //   width: '100%',
+    //   alignItems: 'center',
+    //   background
+    // }
     // categoryItemBtn: {
     //   width: '100%'
     // }

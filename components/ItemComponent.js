@@ -15,7 +15,7 @@ export default class ItemComponent extends Component {
             <View key={index}>
               <Text style={styles.itemText}>{transaction.name}, {transaction.amount} {"\n"}
                {transaction.isRecurring ? 'recurring' : 'Non-recurring'}, type:{transaction.transactionType}
-               , Date: {transaction.date}  </Text>
+               ,{"\n"} Date: {transaction.date}, category: {transaction.category}  </Text>
 
             </View>
           );

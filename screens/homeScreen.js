@@ -31,6 +31,13 @@ class HomeScreen extends React.Component {
         
           onPress={ () => this.props.navigation.navigate('TransactionList')}
           />
+          <Button
+          title="TEST flatlist"
+          titleStyle={styles.buttonTitle}
+          buttonStyle={styles.btn}
+        
+          onPress={ () => this.props.navigation.navigate('Flatlist')}
+          />
         </View>
       );
     }
