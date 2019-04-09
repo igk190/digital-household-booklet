@@ -108,8 +108,8 @@ class AddTransactionsScreen extends Component {
       // style={this.shouldShowError() ? styles.amountInputWrong : styles.amountInput}
       // this.state.category === item.key ? 
       return (
-        <View style={this.state.category === item.key ? styles.categoryItemActive: styles.categoryItem}>
-          <TouchableOpacity style={styles.categoryItemBtn}
+        <View style={this.state.category === item.key ?  styles.categoryItemActive : styles.categoryItem}>
+          <TouchableOpacity 
           activeOpacity={0.1}
           onPress={() => { this.selectCategory(item.key)}}
           // title={item.key}
@@ -134,10 +134,11 @@ class AddTransactionsScreen extends Component {
 
     
     handleBlur = (field) => (evt) => {
+      console.log('FIELD', field, this.state.touched.amount)
       this.setState({
         touched: { ...this.state.touched, [field]: true },
       }, () => {
-        console.log('STATE AFTR', this.state.touched);
+        console.log('FIELD AFTER', field, this.state.touched.amount);
       });
     }
 
@@ -210,22 +211,19 @@ class AddTransactionsScreen extends Component {
 
     //////////////////////////////////////
     amountInfoComplete = () => {
-       const isAmtCompleted = this.state.amount !== null ||this.state.amount.length > 0 || this.state.amount !== '€0,00' ; 
-      //  console.log('isamountComplete', isAmtCompleted)
-       return isAmtCompleted;  // returns false on 1st turn SHOULD RETURN FALSE
+      console.log('DOEKOE in de steet', this.state.amount === '', this.state.amount.length)
+       const isAmtCompleted = this.state.amount !== '' && this.state.amount !== '€0,00' ; 
+       console.log('isamountComplete', isAmtCompleted)
+       return isAmtCompleted; 
      }
-     shouldShowError = () => { // if true, show errow
+     shouldShowError = () => {
        const isAmountCompleted = this.amountInfoComplete();
-       const isAmountTouched = this.state.touched.amount;
-      //  console.log('AMT INF COMPL', isAmountCompleted)
-      //  console.log('TOUCHED??', isAmountTouched)
-
-       let showError = false;
-
+       const isAmountTouched = this.state.touched.amount; 
+      
+       let showError = false; 
        if ((isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
           showError = false;
-       } 
-        else {
+       } else {
           showError = true;
        }
        return showError;
@@ -342,7 +340,8 @@ class AddTransactionsScreen extends Component {
         </View>
 
       
-        <View style={styles.categoriesView}>
+        <View style={styles.categoriesView}> 
+        {/* <Text>Category</Text> */}
           <FlatList
             data={formatCategories(this.checkTransactionType(), numColumns)}
             style={styles.categoriesContainer}
@@ -506,7 +505,6 @@ const styles = StyleSheet.create ({
     },
     categoryItem: {
       backgroundColor: '#FF66B2', // darkpink
-
       alignItems: 'center',
       justifyContent: 'center',
       flex: 1,
@@ -519,13 +517,8 @@ const styles = StyleSheet.create ({
     categoryItemInvisible: {
       backgroundColor: 'transparent',
     },
-    categoryItemBtn: {
-      width: '100%',
-      alignItems: 'center'
-    },
+   
     categoryItemActive: {
-      backgroundColor: 'black', // darkpink
-
       alignItems: 'center',
       justifyContent: 'center',
       flex: 1,
@@ -533,16 +526,13 @@ const styles = StyleSheet.create ({
       height: 40,
       width: '100%',
       padding: 0,
+      backgroundColor: 'darkgrey' , // darkpink
+      fontSize: 20,
+      fontWeight: 'bold',
+      textDecorationLine: 'underline',
     }
-    // categoryItemBtnActive: {
-    //   width: '100%',
-    //   alignItems: 'center',
-    //   background
-    // }
-    // categoryItemBtn: {
-    //   width: '100%'
-    // }
-
+  
+    
 
  
   
