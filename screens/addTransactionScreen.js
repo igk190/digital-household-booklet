@@ -211,10 +211,18 @@ class AddTransactionsScreen extends Component {
 
     //////////////////////////////////////
     amountInfoComplete = () => {
-      console.log('DOEKOE in de steet', this.state.amount === '', this.state.amount.length)
-       const isAmtCompleted = this.state.amount !== '' && this.state.amount !== '€0,00' ; 
-       console.log('isamountComplete', isAmtCompleted)
-       return isAmtCompleted; 
+      let isAmtCompleted = '';
+      if (this.state.touched.amount === false ) {
+        isAmtCompleted = this.state.amount !== ''
+      } else {
+        isAmtCompleted = this.state.amount !== '€0,00' && this.state.amount !== '';
+      }
+      return isAmtCompleted;
+
+      // console.log('DOEKOE in de steet', this.state.amount === '', this.state.amount.length)
+      //  const isAmtCompleted = this.state.amount !== '' && this.state.amount !== '€0,00' ; 
+      //  console.log('isamountComplete', isAmtCompleted)
+      //  return isAmtCompleted; 
      }
      shouldShowError = () => {
        const isAmountCompleted = this.amountInfoComplete();
