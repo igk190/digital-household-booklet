@@ -134,23 +134,20 @@ class AddTransactionsScreen extends Component {
 
     
     handleBlur = (field) => (evt) => {
-      console.log('FIELD', field, this.state.touched.amount)
       this.setState({
         touched: { ...this.state.touched, [field]: true },
       }, () => {
-        console.log('FIELD AFTER', field, this.state.touched.amount);
-      });
+        console.log('FIELD AFTER', field, this.state.touched.name);
+      }) 
     }
 
     handleDescriptionChange = text => {
-      // console.log('HANDLE DESC CHANGE', text)
       this.setState({
         name: text   
       });
     };
 
     handleAmountChange = text => {
-      // console.log('HANDLE DESC CHANGE', text)
       this.setState({
         amount: text   
       });
@@ -209,21 +206,21 @@ class AddTransactionsScreen extends Component {
       })
     }
 
-    //////////////////////////////////////
+    ///////////////////////////////
     amountInfoComplete = () => {
       let isAmtCompleted = '';
-      if (this.state.touched.amount === false ) {
-        isAmtCompleted = this.state.amount !== ''
-      } else {
-        isAmtCompleted = this.state.amount !== '€0,00' && this.state.amount !== '';
+      if (this.state.touched.amount === false) {
+        isAmtCompleted = this.state.amount !== ''; // returns false
+      } else if (this.state.touched.amount === true) {
+      isAmtCompleted = this.state.amount !== '€0,00' && this.state.amount !== '' ; // returns true
       }
       return isAmtCompleted;
-
-      // console.log('DOEKOE in de steet', this.state.amount === '', this.state.amount.length)
-      //  const isAmtCompleted = this.state.amount !== '' && this.state.amount !== '€0,00' ; 
-      //  console.log('isamountComplete', isAmtCompleted)
-      //  return isAmtCompleted; 
      }
+     descriptionInfoComplete = () => {
+       let isDescriptionComplete = this.state.name !== '';
+      return isDescriptionComplete;
+     }
+
      shouldShowError = () => {
        const isAmountCompleted = this.amountInfoComplete();
        const isAmountTouched = this.state.touched.amount; 
@@ -237,26 +234,29 @@ class AddTransactionsScreen extends Component {
        return showError;
      }
 
-     // 1. we go into the app. AmtTouched = false
-     // amountComplete = false. should show NO ERROR   ✓
-     
-     // 2. we go into amountInput, but don't type anything. Then we go
-     //out of the field. AmtTouched = true, amountComplete = false.
-     // Should SHOW ERROR
-     // 3. we go into amountInput, we type sth. but delete everything again.
-     // AmountTouched = true, amountComplete = False. Should SHOW ERROR
-
-     // 4. we go into amtInput, we type sth. We focus out. 
-     // amountTouched = true, amountComplete = true. Shoul show NO ERROR
+  
     
-    descriptionInfoComplete = () => {
-      const desc = this.state.name.length === 0; // all good if TRUE
-      return desc ? false : true; 
+    showDescriptionError = () => {
+      
+      if ((this.state.touched.name === false && this.state.name === '') || (this.state.touched.name === true && this.state.name !== '') ) 
+
+      if (this.state.touched.name === false) {
+        isDescriptionComplete = true; // not really true but we don't want to show an error
+        return isDescriptionComplete
+      } else if (this.state.touched.name === true && this.state.name === ''){
+        isDescriptionComplete = false
+        return isDescriptionComplete
+      }
+      // if isDescriptionComplete ? true : false; 
+     
     }
+    // go into the app. touche===false, complete===false. return showerror: false <-
+    // inside app: touched===true, complete===false. showerror: true
+    // inside app: touched===true, complete===true. showerror; false <- 
 
     isEnabled = () => {
       const amtInfCompl = this.amountInfoComplete();
-      const descInfCompl = this.descriptionInfoComplete();
+      const descInfCompl = this.descriptionInfoComplete(); 
 
       const shouldBeEnabled = amtInfCompl && descInfCompl;
       return shouldBeEnabled ?  false : true; 
@@ -316,7 +316,6 @@ class AddTransactionsScreen extends Component {
       
             onChangeText={this.handleDescriptionChange} 
             onBlur={this.handleBlur('name')}
-            // style={errors.name ? styles.itemInputWrong : styles.itemInput} 
             style={this.descriptionInfoComplete() ? styles.itemInput : styles.itemInputWrong }
             />
         
