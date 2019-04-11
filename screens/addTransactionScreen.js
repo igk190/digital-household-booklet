@@ -89,8 +89,6 @@ class AddTransactionsScreen extends Component {
           transactionType: 'expense', // income or expense, expense == default
           isRecurring: false, // default
           category: '',
-          amtTouched: false,
-          descTouched: false,
           touched: {
             name: false,
             amount: false,
@@ -210,9 +208,10 @@ class AddTransactionsScreen extends Component {
     amountInfoComplete = () => {
       let isAmtCompleted = '';
       if (this.state.touched.amount === false) {
-        isAmtCompleted = this.state.amount !== ''; // returns false
-      } else if (this.state.touched.amount === true) {
-      isAmtCompleted = this.state.amount !== '€0,00' && this.state.amount !== '' ; // returns true
+        isAmtCompleted = false; // obviously, without touching you cant type anything
+      } else {
+      isAmtCompleted = this.state.amount !== '€0,00' && this.state.amount !== '' ;
+      console.log('lalalal', isAmtCompleted) // returns true
       }
       return isAmtCompleted;
      }
@@ -220,10 +219,9 @@ class AddTransactionsScreen extends Component {
        let isDescriptionComplete = this.state.name !== '';
       return isDescriptionComplete;
      }
-
-     shouldShowError = () => {
-       const isAmountCompleted = this.amountInfoComplete();
-       const isAmountTouched = this.state.touched.amount; 
+     showAmountError = () => {
+       const isAmountCompleted = this.amountInfoComplete(); // false or true
+       const isAmountTouched = this.state.touched.amount;  // starts at false
       
        let showError = false; 
        if ((isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
@@ -259,7 +257,7 @@ class AddTransactionsScreen extends Component {
       const descInfCompl = this.descriptionInfoComplete(); 
 
       const shouldBeEnabled = amtInfCompl && descInfCompl;
-      return shouldBeEnabled ?  false : true; 
+      return shouldBeEnabled ? false : true; 
     }
 
     checkTransactionType = () => {
@@ -294,7 +292,7 @@ class AddTransactionsScreen extends Component {
                   value={this.state.amount}
                   onChangeText={this.handleAmountChange} // update state on every keypress
                   keyboardType='numeric'
-                  style={this.shouldShowError() ? styles.amountInputWrong : styles.amountInput}
+                  style={this.showAmountError() ? styles.amountInputWrong : styles.amountInput}
                   placeholder='€00.00'
                   onBlur={this.handleBlur('amount')}
                 />
