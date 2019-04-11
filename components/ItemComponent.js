@@ -12,11 +12,14 @@ export default class ItemComponent extends Component {
       <ScrollView contentContainerStyle={styles.itemsList}>
         {this.props.transactions.map((transaction, index) => {
           return (
-            <View key={index}>
-              <Text style={styles.itemText}>{transaction.name}, {transaction.amount} {"\n"}
+
+            <View key={index}
+            style={styles.item}
+            >
+              <Text 
+              style={styles.itemText}>{transaction.name}, {transaction.amount} {"\n"}
                {transaction.isRecurring ? 'recurring' : 'Non-recurring'}, type:{transaction.transactionType}
                ,{"\n"} Date: {transaction.date}, category: {transaction.category}  </Text>
-
             </View>
           );
         })}
@@ -29,14 +32,37 @@ const styles = StyleSheet.create({
   itemsList: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    // backgroundColor: 'pink',
+
 
   },
   
   itemText: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    // flex: 1, 
+    alignItems: 'center',
+    fontSize: 17,
+    margin: 6,
+    width: '96%',
+    fontWeight: 'bold', 
     textAlign: 'center',
-    backgroundColor: 'lightgrey'
+    backgroundColor: 'lightgrey',
+   
+  },
+  item: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    // padding: 20,
+    margin: 2,
+
+    shadowColor: "#000",
+    shadowOffset: {
+    width: 0,
+    height: 2,
+     },
+    shadowOpacity: 0.47,
+    shadowRadius: 3.65,
   }
 });

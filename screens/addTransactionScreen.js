@@ -164,14 +164,16 @@ class AddTransactionsScreen extends Component {
    
     toggleExpenseBtn = () => {
       this.setState({
-        transactionType: 'expense'
+        transactionType: 'expense',
+        category: ''
       })
       console.log('bye monnie')
     }
     toggleIncomeBtn = () => {
       console.log('rich bish')
       this.setState({
-        transactionType: 'income'
+        transactionType: 'income',
+        category: ''
       })
     }
 
@@ -221,7 +223,7 @@ class AddTransactionsScreen extends Component {
        const isAmountTouched = this.state.touched.amount;  // starts at false
        let showError = false; 
 
-       if ((isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
+       if (isAmountTouched === false ||(isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
           showError = false;
        } else {
           showError = true;
@@ -230,8 +232,7 @@ class AddTransactionsScreen extends Component {
      }
 
      descriptionInfoComplete = () => {
-      let isDescriptionComplete = this.state.name !== ''; // pls strip white spaces
-      // console.log('isDescriptionComplete:', isDescriptionComplete, 'THIS.STATE.NAME', this.state.name)
+      let isDescriptionComplete = this.state.name !== ''; 
      return isDescriptionComplete; 
     }
     
@@ -239,6 +240,7 @@ class AddTransactionsScreen extends Component {
       const isDescriptionCompleted = this.descriptionInfoComplete(); 
       const isDescriptionTouched = this.state.touched.name; 
       let showError = '';
+      
       if (isDescriptionTouched === false || (isDescriptionCompleted && isDescriptionTouched) || (!isDescriptionCompleted && !isDescriptionTouched))  {
         showError = false;
      } else {
@@ -256,7 +258,7 @@ class AddTransactionsScreen extends Component {
       const amtInfCompl = this.amountInfoComplete();
       const descInfCompl = this.descriptionInfoComplete(); 
 
-      const shouldBeEnabled = amtInfCompl && descInfCompl; // both should be true obvs
+      const shouldBeEnabled = amtInfCompl && descInfCompl; 
       return shouldBeEnabled ? false : true; 
     }
 
