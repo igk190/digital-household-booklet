@@ -132,6 +132,7 @@ class AddTransactionsScreen extends Component {
 
     
     handleBlur = (field) => (evt) => {
+      console.log('FIELD BEFORE', field, this.state.touched.name);
       this.setState({
         touched: { ...this.state.touched, [field]: true },
       }, () => {
@@ -211,19 +212,15 @@ class AddTransactionsScreen extends Component {
         isAmtCompleted = false; // obviously, without touching you cant type anything
       } else {
       isAmtCompleted = this.state.amount !== '€0,00' && this.state.amount !== '' ;
-      console.log('lalalal', isAmtCompleted) // returns true
       }
       return isAmtCompleted;
      }
-     descriptionInfoComplete = () => {
-       let isDescriptionComplete = this.state.name !== '';
-      return isDescriptionComplete;
-     }
+  
      showAmountError = () => {
        const isAmountCompleted = this.amountInfoComplete(); // false or true
        const isAmountTouched = this.state.touched.amount;  // starts at false
-      
        let showError = false; 
+
        if ((isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
           showError = false;
        } else {
@@ -232,31 +229,34 @@ class AddTransactionsScreen extends Component {
        return showError;
      }
 
-  
+     descriptionInfoComplete = () => {
+      let isDescriptionComplete = this.state.name !== ''; // pls strip white spaces
+      // console.log('isDescriptionComplete:', isDescriptionComplete, 'THIS.STATE.NAME', this.state.name)
+     return isDescriptionComplete; 
+    }
     
     showDescriptionError = () => {
-      
-      if ((this.state.touched.name === false && this.state.name === '') || (this.state.touched.name === true && this.state.name !== '') ) 
-
-      if (this.state.touched.name === false) {
-        isDescriptionComplete = true; // not really true but we don't want to show an error
-        return isDescriptionComplete
-      } else if (this.state.touched.name === true && this.state.name === ''){
-        isDescriptionComplete = false
-        return isDescriptionComplete
-      }
-      // if isDescriptionComplete ? true : false; 
-     
-    }
-    // go into the app. touche===false, complete===false. return showerror: false <-
+      const isDescriptionCompleted = this.descriptionInfoComplete(); 
+      const isDescriptionTouched = this.state.touched.name; 
+      let showError = '';
+      if (isDescriptionTouched === false || (isDescriptionCompleted && isDescriptionTouched) || (!isDescriptionCompleted && !isDescriptionTouched))  {
+        showError = false;
+     } else {
+        showError = true;
+     }
+     return showError;
+   }
+   // go into the app. touche===false, complete===false. return showerror: false <-
     // inside app: touched===true, complete===false. showerror: true
     // inside app: touched===true, complete===true. showerror; false <- 
+    
+ 
 
     isEnabled = () => {
       const amtInfCompl = this.amountInfoComplete();
       const descInfCompl = this.descriptionInfoComplete(); 
 
-      const shouldBeEnabled = amtInfCompl && descInfCompl;
+      const shouldBeEnabled = amtInfCompl && descInfCompl; // both should be true obvs
       return shouldBeEnabled ? false : true; 
     }
 
@@ -314,7 +314,7 @@ class AddTransactionsScreen extends Component {
       
             onChangeText={this.handleDescriptionChange} 
             onBlur={this.handleBlur('name')}
-            style={this.descriptionInfoComplete() ? styles.itemInput : styles.itemInputWrong }
+            style={this.showDescriptionError() ? styles.itemInputWrong : styles.itemInput }
             />
         
         <View style={styles.textRow}>
