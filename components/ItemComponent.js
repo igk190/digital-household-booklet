@@ -3,13 +3,18 @@ import { View, Text, StyleSheet, ScrollView} from 'react-native';
 import PropTypes from 'prop-types';
 
 export default class ItemComponent extends Component {  
+
   static propTypes = {
     transactions: PropTypes.array.isRequired
   };
 
   render() {
+    // compare the content's height to screen height. If content height larger: enable scrolling
     return (
-      <ScrollView contentContainerStyle={styles.itemsList}>
+      <ScrollView contentContainerStyle={styles.itemsList}
+      
+    
+      >
         {this.props.transactions.map((transaction, index) => {
           return (
 
@@ -17,9 +22,9 @@ export default class ItemComponent extends Component {
             style={styles.item}
             >
               <Text 
-              style={styles.itemText}>{transaction.name}, {transaction.amount} {"\n"}
-               {transaction.isRecurring ? 'recurring' : 'Non-recurring'}, type:{transaction.transactionType}
-               ,{"\n"} Date: {transaction.date}, category: {transaction.category}  </Text>
+              style={styles.itemText}>{transaction.name} - {transaction.amount} {"\n"}
+               {transaction.isRecurring ? 'recurring' : 'Non-recurring'}, type: {transaction.transactionType}
+               ,{"\n"} Date: {transaction.date}, Category: {transaction.category}  </Text>
             </View>
           );
         })}
@@ -30,31 +35,16 @@ export default class ItemComponent extends Component {
 
 const styles = StyleSheet.create({  
   itemsList: {
-    flex: 1,
+    flexGrow: 1,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
     // backgroundColor: 'pink',
-
-
-  },
-  
-  itemText: {
-    // flex: 1, 
-    alignItems: 'center',
-    fontSize: 17,
-    margin: 6,
-    width: '96%',
-    fontWeight: 'bold', 
-    textAlign: 'center',
-    backgroundColor: 'lightgrey',
-   
   },
   item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    // padding: 20,
     margin: 2,
 
     shadowColor: "#000",
@@ -64,5 +54,18 @@ const styles = StyleSheet.create({
      },
     shadowOpacity: 0.47,
     shadowRadius: 3.65,
+  },
+
+  itemText: {
+    // flex: 1, 
+    alignItems: 'center',
+    fontSize: 17,
+
+    margin: 6,
+    width: '96%',
+    fontWeight: 'bold', 
+    textAlign: 'center',
+    backgroundColor: 'lightgrey',
   }
+ 
 });
