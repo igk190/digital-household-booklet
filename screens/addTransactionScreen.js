@@ -86,6 +86,7 @@ class AddTransactionsScreen extends Component {
       this.state = {
           name: '',
           amount: '',
+          currency: '',
           transactionType: 'expense', // income or expense, expense == default
           isRecurring: false, // default
           category: '',
@@ -147,8 +148,20 @@ class AddTransactionsScreen extends Component {
     };
 
     handleAmountChange = text => {
+      let currencySliced = text.slice(0, 1)
+      let amountSliced = text.slice(1)
+      console.log('BLA BLA', typeof amountSliced,  amountSliced) // . to '' AND , to .
+      let amountWithoutPeriod = amountSliced.replace(",", ".");
+      if (amountWithoutPeriod.charAt(1) === ".") {
+        console.log('trueeee')
+      }
+      console.log('AMOUNT WITHOUT ...', amountWithoutPeriod)
+      
+
       this.setState({
-        amount: text   
+        amount: text,
+        currency: currencySliced
+        // currency:   
       });
     };
 
