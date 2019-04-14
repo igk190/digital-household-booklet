@@ -148,22 +148,42 @@ class AddTransactionsScreen extends Component {
     };
 
     handleAmountChange = text => {
-      let currencySliced = text.slice(0, 1)
-      let amountSliced = text.slice(1)
+      let currencySliced = text.slice(0, 1); // save currency in separate var
+      let amountSliced = text.slice(1); // save rest of string amount in separate var
       console.log('BLA BLA', typeof amountSliced,  amountSliced) // . to '' AND , to .
-      let amountWithoutPeriod = amountSliced.replace(",", ".");
-      if (amountWithoutPeriod.charAt(1) === ".") {
-        console.log('trueeee')
-      }
-      console.log('AMOUNT WITHOUT ...', amountWithoutPeriod)
-      
 
-      this.setState({
-        amount: text,
-        currency: currencySliced
-        // currency:   
-      });
-    };
+      if (amountSliced.length <= 7) { 
+        let removePeriod = amountSliced.replace(",", ".");
+        let finalAmount = parseFloat(removePeriod);
+        console.log('FLOAT float bla bla ', typeof finalAmount, finalAmount)
+        this.setState({
+          amount: finalAmount,
+          currency: currencySliced
+        });
+        
+      } else if ((amountSliced.length === 8) ) {
+        let firstPart = amountSliced.slice(0, 1); // thousand
+        let secondPart = amountSliced.slice(2, 9); 
+        let bothParts = firstPart.concat(secondPart);
+        let amountFinal = parseFloat(bothParts.replace(",", "."));
+        
+        console.log('FINAL', typeof amountFinal);
+        
+        this.setState({
+          amount: amountFinal,
+          currency: currencySliced
+        });
+      }
+      // @todo some day add code to cover larger numbrs...
+    }
+    
+      // console.log('AMOUNT WITHOUT ...', amountUpdated)
+    
+      // this.setState({
+      //   amount: text,
+      //   currency: currencySliced
+      //   }, () => { console.log('update baby', this.state.amount, this.state.currency)});
+      // };
 
     toggleRecurring = () => {
       console.log(this.state.isRecurring)
