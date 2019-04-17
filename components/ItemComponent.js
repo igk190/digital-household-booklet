@@ -1,6 +1,19 @@
 import React, { Component } from 'react';  
 import { View, Text, StyleSheet, ScrollView} from 'react-native';  
 import PropTypes from 'prop-types';
+import Swipeout from 'react-native-swipeout';
+
+
+const swipeoutBtns = [
+  {
+    text: 'Delete',
+    backgroundColor: 'red',
+    onPress: () => { test() } /// uhm
+  }
+]
+test = () => {
+  console.log('i are test')
+}
 
 export default class ItemComponent extends Component {  
 
@@ -8,6 +21,7 @@ export default class ItemComponent extends Component {
     transactions: PropTypes.array.isRequired
   };
 
+  
   
 
   render() {
@@ -17,10 +31,14 @@ export default class ItemComponent extends Component {
       >
         {this.props.transactions.map((transaction, index) => {
           return (
-
-            <View key={index}
-            style={styles.item}
+            <Swipeout 
+            right={swipeoutBtns}
+            key={index}
+            style={{backgroundColor: 'white'}}
+            
             >
+            <View style={styles.item}>
+            
               <View style={styles.itemText}>
                 <View style={styles.dateStyle}>
                     <Text style={styles.dateText}> date: {transaction.date} </Text>
@@ -32,21 +50,13 @@ export default class ItemComponent extends Component {
                   <Text style={styles.right}>{transaction.category} </Text> 
                 </View>
 
-                {/* <View style={styles.row}>
-                    <Text style={styles.left}>{transaction.name} </Text>
-                    <Text style={styles.right}>{transaction.amount}</Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.left}>{transaction.isRecurring ? 'recurring' : 'non-recurring'} {transaction.transactionType}</Text>
-                  <Text style={styles.right}>category: {transaction.category} </Text> 
-                </View> */}
-              </View>
-
-           
+             
+              </View> 
 
             
 
-            </View>
+              </View>
+            </Swipeout>
           );
         })}
       </ScrollView>
@@ -126,10 +136,6 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     marginRight: 10,
   }
-
-
-  
-
 
  
 });
