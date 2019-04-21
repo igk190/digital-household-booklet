@@ -13,7 +13,6 @@ import {
 import { Button, Icon } from 'react-native-elements';
 
 import { TextInputMask } from 'react-native-masked-text';
-// import styles from '../styles/styles';
 
 import { db } from '../src/config';
 
@@ -388,7 +387,6 @@ class AddTransactionsScreen extends Component {
             renderItem={this.renderItem}
             numColumns={numColumns}
             extraData={this.state}
-           
           />
         </View>
         

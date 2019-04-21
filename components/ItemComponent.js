@@ -4,38 +4,53 @@ import PropTypes from 'prop-types';
 import Swipeout from 'react-native-swipeout';
 
 
-const swipeoutBtns = [
-  {
-    text: 'Delete',
-    backgroundColor: 'red',
-    onPress: () => { test() } /// uhm
-  }
-]
-test = () => {
-  console.log('i are test')
-}
 
 export default class ItemComponent extends Component {  
 
+  state = {
+    touchedRow: ''
+  };
+
   static propTypes = {
-    transactions: PropTypes.array.isRequired
+    transactions: PropTypes.array.isRequired,
+    test: PropTypes.func
   };
 
   
-  
+
+  swipeoutBtns = [
+    {
+      text: 'Delete',
+      backgroundColor: 'red',
+      onPress: () => { this.deleteEntry() } /// uhm
+    }
+  ]
+  deleteEntry = () => {
+    console.log('i are test', this.state.touchedRow)
+    this.props.bla(this.state.touchedRow)
+    // console.log(this.state.touchedRow, this.props.transactions[index])
+ 
+  };
+
+ 
+ 
+
 
   render() {
-    // compare the content's height to screen height. If content height larger: enable scrolling
     return (
       <ScrollView contentContainerStyle={styles.itemsList}
       >
         {this.props.transactions.map((transaction, index) => {
           return (
             <Swipeout 
-            right={swipeoutBtns}
+            right={this.swipeoutBtns}
             key={index}
             style={{backgroundColor: 'white'}}
-            
+            onOpen={() => {
+              this.setState({
+                touchedRow: index
+              }, () => {console.log(this.state.touchedRow, 'blablabl')} )
+            }}
             >
             <View style={styles.item}>
             
@@ -49,11 +64,11 @@ export default class ItemComponent extends Component {
                   <Text style={transaction.transactionType === 'expense' ? styles.centerExpense : styles.centerIncome}>{transaction.amount}</Text>
                   <Text style={styles.right}>{transaction.category} </Text> 
                 </View>
+                
 
              
               </View> 
 
-            
 
               </View>
             </Swipeout>
@@ -86,7 +101,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemText: {
-    // alignItems: 'center',
     fontSize: 17,
     margin: 6,
     width: '96%',
