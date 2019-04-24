@@ -7,6 +7,8 @@ import {
   AlertIOS,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
+  TouchableHighlight,
   FlatList,
   TouchableWithoutFeedback
 } from 'react-native';
@@ -93,6 +95,7 @@ class AddTransactionsScreen extends Component {
             name: false,
             amount: false,
           },
+          focusOutOfTextinputs: '',
           date: '',
           wasSaved: false,  
           selectedItem: null
@@ -107,13 +110,15 @@ class AddTransactionsScreen extends Component {
       // this.state.category === item.key ? 
       return (
         // <View style={this.state.category === item.key ?  styles.categoryItemActive : styles.categoryItem}>
-          <TouchableOpacity 
-          activeOpacity={0.1}
+          <TouchableHighlight 
+          // activeOpacity={0.1}
+          underlayColor={'#000'}
+          activeOpacity={0.3}
           onPress={() => { this.selectCategory(item.key)}}
           style={this.state.category === item.key ?  styles.categoryItemActive : styles.categoryItem}
           >  
-            <Text>{item.key}</Text>           
-          </TouchableOpacity>
+            <Text style={styles.categoryButton}>{item.key}</Text>           
+          </TouchableHighlight>
         // </View>
       );
     };
@@ -132,18 +137,33 @@ class AddTransactionsScreen extends Component {
 
     
     handleBlur = (field) => (evt) => {
-      if (this.state.touched[field] === false ) {
-        console.log('FIELD BEFORE', field, this.state.touched.name);
+      if (this.state.wasSaved === true) {
         this.setState({
-          touched: { ...this.state.touched, [field]: true },
-        }, () => {
-          console.log('FIELD AFTER', field, this.state.touched[field]);
-        }) 
+          touched: { ...this.state.touched, amount: false },
+          touched: { ...this.state.touched, name: false},
+          wasSaved: false 
+        }, () => { console.log('why u red', this.state.touched.amount, this.state.touched.name)})
       } else {
-        console.log('already done')
+
+        if (this.state.touched[field] === false ) {
+          console.log('FIELD BEFORE', field, this.state.touched.name);
+          this.setState({
+            touched: { ...this.state.touched, [field]: true },
+          }, () => {
+            console.log('FIELD AFTER', field, this.state.touched[field], this.state.wasSaved);
+          }) 
+        } else {
+          console.log('already done')
+        }
+
       }
-      
+
+   
     }
+    // ONBLUR: if was saved = true: - dubbele re-render??
+    // then  set state alles touched = false
+     
+
 
     handleDescriptionChange = text => {
       this.setState({
@@ -192,17 +212,8 @@ class AddTransactionsScreen extends Component {
           }, () => { console.log('done', this.state.amount)});
           
       }
-
-      // @TODO block user from adding bigger nrs by validating input with char max >10
     }
     
-      // console.log('AMOUNT WITHOUT ...', amountUpdated)
-    
-      // this.setState({
-      //   amount: text,
-      //   currency: currencySliced
-      //   }, () => { console.log('update baby', this.state.amount, this.state.currency)});
-      // };
 
     toggleRecurring = () => {
       console.log(this.state.isRecurring)
@@ -246,13 +257,14 @@ class AddTransactionsScreen extends Component {
     submitAndClear = () => {
       this.setState({
         name: '',
-        amount: '',
+        amount: 0,
         isRecurring: false,
         transactionType: 'expense',
         touched: {
           amount: false,
           name: false,
         },
+        focusOutOfTextinputs: false,
         date: '',
         wasSaved: true,
         category: ''
@@ -261,21 +273,9 @@ class AddTransactionsScreen extends Component {
 
     ///////////////////////////////
     amountInfoComplete = () => {
-    //   let isAmtCompleted = '';
-
-    //   if (this.state.touched.amount === false) {
-    //     isAmtCompleted = false; // obviously, without touching you cant type anything
-    //     // console.log('touched', this.state.touched.amount, 'amount', this.state.amount.length)
-    //   } else {
-    //   isAmtCompleted = this.state.amount !== 0;
-    //   }
-    //   return isAmtCompleted;
-    // 
     let isAmtCompleted = this.state.amount !== 0;
     return isAmtCompleted; 
      }
-
-  
   
      showAmountError = () => {
        const isAmountCompleted = this.amountInfoComplete(); // false or true FIXED
@@ -311,13 +311,18 @@ class AddTransactionsScreen extends Component {
     // inside app: touched===true, complete===false. showerror: true
     // inside app: touched===true, complete===true. showerror; false <- 
     
+    categoryComplete = () => {
+      let isCatComplete = this.state.category !== '';
+      return isCatComplete;
+    }
  
 
     isEnabled = () => {
       const amtInfCompl = this.amountInfoComplete();
       const descInfCompl = this.descriptionInfoComplete(); 
+      const categoryCompl = this.categoryComplete();
 
-      const shouldBeEnabled = amtInfCompl && descInfCompl; 
+      const shouldBeEnabled = amtInfCompl && descInfCompl && categoryCompl; 
       return shouldBeEnabled ? false : true; 
     }
 
@@ -335,7 +340,8 @@ class AddTransactionsScreen extends Component {
       // console.log('helemaal aan het begin', typeof this.state.amount, this.state.amount.length)
       return (
         <DismissKeyboard>
-        <View style={styles.upperMain}>
+        <ScrollView contentContainerStyle={styles.upperMain}
+        keyboardShouldPersistTaps='handled'>
           <View style={styles.main}>
   
             <View style={styles.BTNcontainer}>
@@ -358,6 +364,8 @@ class AddTransactionsScreen extends Component {
                   placeholder='€00.00'
                   onBlur={this.handleBlur('amount')}
                   maxLength={10}
+                  ref={"test"}
+                  // isFocused={this.state.wasSaved === true ? this.state.focusOutOfTextinputs }
                 />
       
           
@@ -378,6 +386,7 @@ class AddTransactionsScreen extends Component {
             onChangeText={this.handleDescriptionChange} 
             onBlur={this.handleBlur('name')}
             style={this.showDescriptionError() ? styles.itemInputWrong : styles.itemInput }
+           
             />
         
         <View style={styles.textRow}>
@@ -428,7 +437,7 @@ class AddTransactionsScreen extends Component {
               /> 
         </View>
 
-      </View>
+      </ScrollView>
       </DismissKeyboard>
       );
     }
@@ -571,6 +580,12 @@ const styles = StyleSheet.create ({
       marginVertical: 20,
       
     },
+    categoryButton: {
+      fontSize: 14,
+      // fontWeight: 'bold',
+      
+    },
+      
     categoryItem: {
       backgroundColor: '#FF66B2', // darkpink
       alignItems: 'center',
@@ -594,10 +609,8 @@ const styles = StyleSheet.create ({
       height: 40,
       width: '100%',
       padding: 0,
-      backgroundColor: 'darkgrey' , // darkpink
-      fontSize: 20,
-      fontWeight: 'bold',
-      textDecorationLine: 'underline',
+      backgroundColor: '#00aeef' , // blue
+
     }
   
     
