@@ -35,7 +35,7 @@ const expenseCategories = [
   {key: 'Education'},
   {key: 'Electronics'},
   {key: 'Clothes'},
-  {key: 'Food'},
+  {key: 'Groceries'},
   {key: 'General'},
   {key: 'Leisure'},
   {key: 'Medical'},
@@ -84,7 +84,7 @@ class AddTransactionsScreen extends Component {
 
       this.state = {
           name: '',
-          amount: '',
+          amount: 0,
           currency: '',
           transactionType: 'expense', // income or expense, expense == default
           isRecurring: false, // default
@@ -106,15 +106,15 @@ class AddTransactionsScreen extends Component {
       // style={this.shouldShowError() ? styles.amountInputWrong : styles.amountInput}
       // this.state.category === item.key ? 
       return (
-        <View style={this.state.category === item.key ?  styles.categoryItemActive : styles.categoryItem}>
+        // <View style={this.state.category === item.key ?  styles.categoryItemActive : styles.categoryItem}>
           <TouchableOpacity 
           activeOpacity={0.1}
           onPress={() => { this.selectCategory(item.key)}}
-          // title={item.key}
+          style={this.state.category === item.key ?  styles.categoryItemActive : styles.categoryItem}
           >  
             <Text>{item.key}</Text>           
           </TouchableOpacity>
-        </View>
+        // </View>
       );
     };
 
@@ -132,12 +132,17 @@ class AddTransactionsScreen extends Component {
 
     
     handleBlur = (field) => (evt) => {
-      console.log('FIELD BEFORE', field, this.state.touched.name);
-      this.setState({
-        touched: { ...this.state.touched, [field]: true },
-      }, () => {
-        console.log('FIELD AFTER', field, this.state.touched.name);
-      }) 
+      if (this.state.touched[field] === false ) {
+        console.log('FIELD BEFORE', field, this.state.touched.name);
+        this.setState({
+          touched: { ...this.state.touched, [field]: true },
+        }, () => {
+          console.log('FIELD AFTER', field, this.state.touched[field]);
+        }) 
+      } else {
+        console.log('already done')
+      }
+      
     }
 
     handleDescriptionChange = text => {
@@ -149,31 +154,46 @@ class AddTransactionsScreen extends Component {
     handleAmountChange = text => {
       let currencySliced = text.slice(0, 1); // save currency in separate var
       let amountSliced = text.slice(1); // save rest of string amount in separate var
-      console.log('BLA BLA', typeof amountSliced,  amountSliced) // . to '' AND , to .
+      console.log('Still a string', typeof amountSliced,  amountSliced) // . to '' AND , to .
 
-      if (amountSliced.length <= 7) { 
+      if (amountSliced.length <= 6) { 
         let removePeriod = amountSliced.replace(",", ".");
         let finalAmount = parseFloat(removePeriod);
-        console.log('FLOAT float bla bla ', typeof finalAmount, finalAmount)
+        console.log('Now a FLOAT ', typeof finalAmount, finalAmount)
         this.setState({
           amount: finalAmount,
           currency: currencySliced
-        });
+        }, () => { console.log('DONE: length', amountSliced.length, ',', this.state.amount)});
         
-      } else if ((amountSliced.length === 8) ) {
-        let firstPart = amountSliced.slice(0, 1); // thousand
+      } else if (amountSliced.length === 8 ) { 
+        let firstPart = amountSliced.slice(0, 1); // thousand 
         let secondPart = amountSliced.slice(2, 9); 
         let bothParts = firstPart.concat(secondPart);
         let amountFinal = parseFloat(bothParts.replace(",", "."));
         
-        console.log('FINAL', typeof amountFinal);
+        console.log('FINAL', typeof amountFinal, amountFinal);
         
         this.setState({
           amount: amountFinal,
           currency: currencySliced
-        });
+        }, () => { console.log('DONE', amountSliced.length, this.state.amount)});
+
+      } else if (amountSliced.length === 9 || amountSliced.length === 10 ) {
+          let amountWithoutThousandDot = amountSliced.replace(".", "");
+          console.log(amountWithoutThousandDot)
+          let finalAmount = amountWithoutThousandDot.replace(',', '.');
+          console.log(finalAmount);
+          finalAmount = parseFloat(finalAmount);
+          console.log('I am the biggest float', finalAmount);
+
+          this.setState({
+            amount: finalAmount,
+            currency: currencySliced
+          }, () => { console.log('done', this.state.amount)});
+          
       }
-      // @todo some day add code to cover larger numbrs...
+
+      // @TODO block user from adding bigger nrs by validating input with char max >10
     }
     
       // console.log('AMOUNT WITHOUT ...', amountUpdated)
@@ -241,21 +261,28 @@ class AddTransactionsScreen extends Component {
 
     ///////////////////////////////
     amountInfoComplete = () => {
-      let isAmtCompleted = '';
-      if (this.state.touched.amount === false) {
-        isAmtCompleted = false; // obviously, without touching you cant type anything
-      } else {
-      isAmtCompleted = this.state.amount !== '€0,00' && this.state.amount !== '' ;
-      }
-      return isAmtCompleted;
+    //   let isAmtCompleted = '';
+
+    //   if (this.state.touched.amount === false) {
+    //     isAmtCompleted = false; // obviously, without touching you cant type anything
+    //     // console.log('touched', this.state.touched.amount, 'amount', this.state.amount.length)
+    //   } else {
+    //   isAmtCompleted = this.state.amount !== 0;
+    //   }
+    //   return isAmtCompleted;
+    // 
+    let isAmtCompleted = this.state.amount !== 0;
+    return isAmtCompleted; 
      }
+
+  
   
      showAmountError = () => {
-       const isAmountCompleted = this.amountInfoComplete(); // false or true
-       const isAmountTouched = this.state.touched.amount;  // starts at false
+       const isAmountCompleted = this.amountInfoComplete(); // false or true FIXED
+       const isAmountTouched = this.state.touched.amount;  // starts at false FIXED
        let showError = false; 
 
-       if (isAmountTouched === false ||(isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
+       if (isAmountCompleted || (isAmountCompleted && isAmountTouched) || (!isAmountCompleted && !isAmountTouched))  {
           showError = false;
        } else {
           showError = true;
@@ -264,8 +291,8 @@ class AddTransactionsScreen extends Component {
      }
 
      descriptionInfoComplete = () => {
-      let isDescriptionComplete = this.state.name !== ''; 
-     return isDescriptionComplete; 
+      let isDescriptionComplete = this.state.name.length !== 0;
+      return isDescriptionComplete; 
     }
     
     showDescriptionError = () => {
@@ -296,7 +323,7 @@ class AddTransactionsScreen extends Component {
 
     checkTransactionType = () => {
       if (this.state.transactionType === 'expense') {
-        console.log('am i getting here')
+        // console.log('am i getting here')
         return expenseCategories
       } else {
         return incomeCategories
@@ -305,6 +332,7 @@ class AddTransactionsScreen extends Component {
 
  
     render() {
+      // console.log('helemaal aan het begin', typeof this.state.amount, this.state.amount.length)
       return (
         <DismissKeyboard>
         <View style={styles.upperMain}>
@@ -329,6 +357,7 @@ class AddTransactionsScreen extends Component {
                   style={this.showAmountError() ? styles.amountInputWrong : styles.amountInput}
                   placeholder='€00.00'
                   onBlur={this.handleBlur('amount')}
+                  maxLength={10}
                 />
       
           
@@ -343,7 +372,7 @@ class AddTransactionsScreen extends Component {
  
             <TextInput 
             maxLength={50}
-            placeholder='Description e.g. washing powder'
+            placeholder='Description e.g. bread, milk'
             value={this.state.name}
       
             onChangeText={this.handleDescriptionChange} 
@@ -540,6 +569,7 @@ const styles = StyleSheet.create ({
     categoriesContainer: {
       flex: 1,
       marginVertical: 20,
+      
     },
     categoryItem: {
       backgroundColor: '#FF66B2', // darkpink
