@@ -8,12 +8,18 @@ let transactionsRef = db.ref('/transactions'); // not recommended according to d
 
 class TransactionListScreen extends Component {
 
+  // constructor(props) {
+  //   super(props);
+
+  //   this._isMounted = false;
+    
     state = {
       transactions: [],
       isMounted: false, // new,
       hasTransactions: false
-    };
-
+      };
+    // }
+    
     stateIsEmpty = () => {
       this.state.transactions.length > 0 ? 
       this.setState({
@@ -22,14 +28,13 @@ class TransactionListScreen extends Component {
       console.log('da state array is empty')
     };
 
-    componentDidMount() { // is supposed to run after component is mounted
+    componentDidMount = () => { // is supposed to run after component is mounted
+      // this._isMounted = true;
+    
       transactionsRef.on('value', snapshot => {
         let data = snapshot.val(); // receives null if empty when you call val on the snapshot
-        // console.log('reffffff', snapshot.val())
-
+        console.log('reffffff', snapshot.val())
         let transactions = '';
-        // let bla = Object.values(data);
-
         data === null ? 
         console.log('huhu im empty')
         :
@@ -37,42 +42,33 @@ class TransactionListScreen extends Component {
         
         this.setState({  
           transactions: transactions,
-          isMounted: true  // delete if not helping
+          // isMounted: true  // delete if not helping
         });
-        // console.log('herro', Object.keys(data)[0]) //< this!
-        // console.log('BLA',bla)
+
       });
-    }
+    } 
 
     test = (x) => {
-      console.log('are i working', x);
       let itemIndexToDelete = x;
-      console.log(itemIndexToDelete);
-      // console.log('TEST',transactionsRef.child[itemIndexToDelete]) // no wurk 
-     
+      console.log('item to del', itemIndexToDelete)
+
       transactionsRef.on('value', snapshot => {
         let data = snapshot.val();
         let KeyWeNeed = Object.keys(data)[itemIndexToDelete]
-        console.log('test', Object.keys(data)[itemIndexToDelete]) // here we have what we want to delete
-        // console.log('more test', transactionsRef.child(Object.keys(data)[itemIndexToDelete])) // nope.
-        // let bla = Object.values(data); // gives all firebase generated keys in array only
-        // Object.keys(data)[itemIndexToDelete].remove(); doesnt work
-        // let newRef = db.ref('/transactions' + '/' + Object.keys(data)[itemIndexToDelete]); // nope
-        let transactions = Object.keys(data)
-        // transactionsRef.child(KeyWeNeed).remove(); // nope
-        // transactionsRef.child(Object.keys(data)[itemIndexToDelete]).remove();
+        console.log('test', KeyWeNeed) // here we have what we want to delete - undefined
+       
+        // let transactions = Object.keys(data)
+        // console.log('TRANSSSSS', transactions) 
 
-        console.log('your mom', db.ref('transactions/' + KeyWeNeed).once('value'))
         let momRef = db.ref('transactions/' + KeyWeNeed);
-        momRef.remove();
-          // db.ref('/transactions/' + KeyWeNeed).once('value').remove()
+        console.log('momref', momRef) // undefined
+        momRef.set(null);
       })
-    }
-
+    } 
     
-    componentWillUnmount(){  //new
-      this.state.isMounted = false  // ????? this makes no sense
-    }
+  //   componentWillUnmount() {
+  //     this._isMounted = false;
+  //  }
 
     render() {
       return (
@@ -80,7 +76,7 @@ class TransactionListScreen extends Component {
             
             {this.state.transactions.length > 0 ? 
           <ItemComponent transactions={this.state.transactions}
-          bla={this.test} />
+          test={this.test} />
          : 
           <Text>No transactions in da list </Text>
         }

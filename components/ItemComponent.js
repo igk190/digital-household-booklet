@@ -7,35 +7,51 @@ import Swipeout from 'react-native-swipeout';
 
 export default class ItemComponent extends Component {  
 
-  state = {
-    touchedRow: ''
-  };
+  // constructor(props) {
+  //   super(props);
 
+  //   this._isMounted = false;
+
+    state = {
+      touchedRow: ''
+    };
+  // }
   static propTypes = {
     transactions: PropTypes.array.isRequired,
     test: PropTypes.func
   };
 
-  
-
-  swipeoutBtns = [
+  // infoBtn = [
+  //   {
+  //     text: 'Details',
+  //     backgroundColor: 'green',
+  //     onPress: () => { console.log('bla s') }
+  //   }
+  // ]
+  deleteBtn = [
     {
       text: 'Delete',
       backgroundColor: 'red',
       onPress: () => { this.deleteEntry() } /// uhm
     }
+  //    { text: 'test',
+  //   backgroundColor: 'pink',
+  //   onPress: () => { this.deleteEntry() }
+  //  }
   ]
   deleteEntry = () => {
     console.log('i are test', this.state.touchedRow)
-    this.props.bla(this.state.touchedRow)
-    // console.log(this.state.touchedRow, this.props.transactions[index])
- 
+    this.props.test(this.state.touchedRow)
   };
 
+  // componentDidMount() { 
+  //   this._isMounted = true;
+  // }
+  
+  // componentWillUnmount() {
+  //   this._isMounted = false;
+  // }
  
- 
-
-
   render() {
     return (
       <ScrollView contentContainerStyle={styles.itemsList}
@@ -43,9 +59,12 @@ export default class ItemComponent extends Component {
         {this.props.transactions.map((transaction, index) => {
           return (
             <Swipeout 
-            right={this.swipeoutBtns}
+            right={this.deleteBtn}
+            onPress={console.log('badasdadd')}
+            // left={this.infoBtn}
             key={index}
             style={{backgroundColor: 'white'}}
+            close={this.state.touchedRow !== index ? true : false} // todo
             onOpen={() => {
               this.setState({
                 touchedRow: index
@@ -56,7 +75,7 @@ export default class ItemComponent extends Component {
             
               <View style={styles.itemText}>
                 <View style={styles.dateStyle}>
-                    <Text style={styles.dateText}> date: {transaction.date} </Text>
+                    <Text style={styles.dateText}> date: {transaction.dateDay}/{transaction.dateMonth}/{transaction.dateYear} </Text>
                 </View>
 
                 <View style={styles.row}>
@@ -136,6 +155,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: 'red',
+    marginLeft: 2,
   },
   centerIncome: {
     flex: 1/4,

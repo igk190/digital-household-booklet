@@ -1,6 +1,7 @@
 import Firebase from 'firebase';  
 
 let config = {
+  // FIREBASE CREDENTIALS
     apiKey: "AIzaSyBxi3YJtG2ah0ill77rzrt-wbtjcp2UKPQ",
     authDomain: "digi-household-booklet.firebaseapp.com",
     databaseURL: "https://digi-household-booklet.firebaseio.com",

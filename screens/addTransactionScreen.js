@@ -6,12 +6,14 @@ import {
   TextInput,
   AlertIOS,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   TouchableHighlight,
   FlatList,
   TouchableWithoutFeedback
 } from 'react-native';
+
+import {Ionicons, FontAwesome, Foundation} from '@expo/vector-icons'
+
 import { Button, Icon } from 'react-native-elements';
 
 import { TextInputMask } from 'react-native-masked-text';
@@ -23,36 +25,76 @@ import { db } from '../src/config';
 let addTransaction = transaction => {
   db.ref('/transactions').push({   // items
     name: transaction.name,
+    currency: transaction.currency,
     amount: transaction.amount,
     isRecurring: transaction.isRecurring,
     transactionType: transaction.transactionType,
-    date: transaction.date,
+    // date: transaction.date,
+    dateDay: transaction.dateDay,
+    dateMonth: transaction.dateMonth,
+    dateYear: transaction.dateYear,
+
     category: transaction.category
-  });
-  // console.log(transaction, "dfsf") // what R u 
+  }, () => { console.log('test callback after ADD TRANSACTION')});
 };
 
 const expenseCategories = [
-  {key: 'Eating out'},
-  {key: 'Education'},
-  {key: 'Electronics'},
-  {key: 'Clothes'},
-  {key: 'Groceries'},
-  {key: 'General'},
-  {key: 'Leisure'},
-  {key: 'Medical'},
-  {key: 'Toiletries'},
-  {key: 'Transport'},
-  {key: 'Travel'},
-  {key: 'Other'} 
+  { key: 'Eating out',
+  icon: 'ios-restaurant'
+  },
+  { key: 'Education',
+  icon: 'ios-school'
+  },
+  { key: 'Electronics',
+  icon: 'ios-laptop'
+  },
+  { key: 'Clothes',
+  icon: 'ios-shirt'
+  },
+  { key: 'Groceries',
+  icon: 'ios-nutrition'
+  },
+  { key: 'General',
+  icon: 'ios-today'
+  },
+  { key: 'Leisure',
+  icon: 'ios-beer'
+  },
+  { key: 'Medical',
+  icon: 'ios-medkit'
+  },
+  { key: 'Toiletries',
+  icon: 'ios-heart'
+  },
+  { key: 'Transport',
+  icon: 'ios-bus' // subway
+  },
+  { key: 'Travel',
+  icon: 'ios-airplane'
+  },
+  { key: 'Other',
+  icon: 'ios-clipboard'
+},
 ];
 const incomeCategories = [
-  {key: 'Salary'},
-  {key: 'Gifts'},
-  {key: 'Interest'},
-  {key: 'Investments'},
-  {key: 'Sales'},
-  {key: 'Social sec.'}, 
+  { key: 'Salary',
+    icon: 'ios-briefcase'
+  },
+  { key: 'Gifts',
+    icon: 'ios-gift'
+  },
+  { key: 'Interest',
+    icon: 'ios-expand'
+  },
+  { key: 'Investments',
+    icon: 'ios-folder'
+  },
+  { key: 'Sales',
+    icon: 'ios-funnel'
+  },
+  { key: 'Social sec.',
+  icon: 'ios-body'
+  }, 
 ];
 const numColumns = 4;
 
@@ -75,30 +117,31 @@ const DismissKeyboard = ({ children }) => (
 );
 
 
-
 class AddTransactionsScreen extends Component {
+    
     static navigationOptions = {
-      title: 'Add Transaction', 
-    };
+        title: 'Add Transaction', 
+      };
  
     constructor(props){
       super(props)
 
-      this.state = {
-          name: '',
-          amount: 0,
-          currency: '',
-          transactionType: 'expense', // income or expense, expense == default
-          isRecurring: false, // default
-          category: '',
-          touched: {
-            name: false,
-            amount: false,
-          },
-          focusOutOfTextinputs: '',
-          date: '',
-          wasSaved: false,  
-          selectedItem: null
+
+    this.state = { 
+        name: '',
+        amount: 0,
+        currency: '',
+        transactionType: 'expense', // income or expense, expense == default
+        isRecurring: false, // default
+        category: '',
+        touched: {
+          name: false,
+          amount: false,
+        },
+        dateDay: '',
+        dateMonth: '',
+        dateYear: '',
+        wasSaved: false,  
       }
     }
 
@@ -106,8 +149,6 @@ class AddTransactionsScreen extends Component {
       if (item.empty === true) {
         return <View style={[styles.categoryItem, styles.categoryItemInvisible]} />;
       }
-      // style={this.shouldShowError() ? styles.amountInputWrong : styles.amountInput}
-      // this.state.category === item.key ? 
       return (
         // <View style={this.state.category === item.key ?  styles.categoryItemActive : styles.categoryItem}>
           <TouchableHighlight 
@@ -117,15 +158,16 @@ class AddTransactionsScreen extends Component {
           onPress={() => { this.selectCategory(item.key)}}
           style={this.state.category === item.key ?  styles.categoryItemActive : styles.categoryItem}
           >  
-            <Text style={styles.categoryButton}>{item.key}</Text>           
+            <View style={{alignItems: 'center',justifyContent: 'center'}}>
+              <Ionicons name={item.icon} size={18} color="black" />
+              <Text style={styles.categoryButton}>{item.key}</Text>  
+            </View>         
           </TouchableHighlight>
         // </View>
       );
     };
 
     selectCategory = (item) => {
-      // clear background color of all other categories
-      // el with onpress: give this one new color / bold text whtvr
       console.log(item)
       this.setState({
         category: item
@@ -155,19 +197,17 @@ class AddTransactionsScreen extends Component {
         } else {
           console.log('already done')
         }
-
-      }
-
-   
+      } 
     }
-    // ONBLUR: if was saved = true: - dubbele re-render??
-    // then  set state alles touched = false
-     
+  
 
 
     handleDescriptionChange = text => {
+      let trimmedDescription = '';
+      trimmedDescription = text.trimStart()
+      console.log('text: ', text, ' trimmed: ', trimmedDescription)
       this.setState({
-        name: text   
+        name: trimmedDescription   
       });
     };
 
@@ -240,20 +280,41 @@ class AddTransactionsScreen extends Component {
       })
     }
 
-    componentDidMount() {
-      let date = new Date().getDate(); //Current Date
+    
+    //  handleSubmit = () => {
+    //   addTransaction(this.state); // this first THEN submitclear needed?
+    //   this.submitAndClear()
+    //   AlertIOS.alert('Transaction saved succesfully')
+    // }
+    getDate = () => {
+      let day = new Date().getDate(); //Current Date
       var month = new Date().getMonth() + 1; //Current Month
       var year = new Date().getFullYear(); //Current Year
+      // let finalDate = date + '/' + month + '/' + year
       this.setState({
-        date: date + '/' + month + '/' + year
-      })
+        dateDay: day,
+        dateMonth: month,
+        dateYear: year
+      }, () => { console.log (this.state.dateDay, this.state.dateMonth, this.state.dateYear)})
     }
+
     
     handleSubmit = () => {
-      addTransaction(this.state); // this first THEN submitclear needed?
-      this.submitAndClear();
-      AlertIOS.alert('Transaction saved succesfully');
-    }
+      (async () => {
+        await this.getDate();
+        await addTransaction(this.state);
+        await this.submitAndClear()
+        await AlertIOS.alert('Transaction saved succesfully');
+        console.log('all done!');
+      })();
+      // bla();
+      // addTransaction(this.state);
+      // this.submitAndClear()
+      // AlertIOS.alert('Transaction saved succesfully')
+      
+    }; // end handle submit
+
+    
     submitAndClear = () => {
       this.setState({
         name: '',
@@ -264,10 +325,11 @@ class AddTransactionsScreen extends Component {
           amount: false,
           name: false,
         },
-        focusOutOfTextinputs: false,
         date: '',
         wasSaved: true,
         category: ''
+      }, () => {
+        console.log('AFTER SUBMIT&CLEAR---------- done ');
       })
     }
 
@@ -382,7 +444,6 @@ class AddTransactionsScreen extends Component {
             maxLength={50}
             placeholder='Description e.g. bread, milk'
             value={this.state.name}
-      
             onChangeText={this.handleDescriptionChange} 
             onBlur={this.handleBlur('name')}
             style={this.showDescriptionError() ? styles.itemInputWrong : styles.itemInput }
@@ -418,7 +479,8 @@ class AddTransactionsScreen extends Component {
 
       
         <View style={styles.categoriesView}> 
-        {/* <Text>Category</Text> */}
+        <Text style={this.amountInfoComplete() && this.descriptionInfoComplete() ? styles.selectCatTextBold : styles.selectCatText}
+        >Select a category:</Text>
           <FlatList
             data={formatCategories(this.checkTransactionType(), numColumns)}
             style={styles.categoriesContainer}
@@ -571,19 +633,24 @@ const styles = StyleSheet.create ({
     categoriesView: {
       backgroundColor: '#FFCCE5',
       flex: 1.6,
-      flexDirection: 'row',
+      flexDirection: 'column',
       // padding: 25, 
       justifyContent: 'space-between'
     },
     categoriesContainer: {
       flex: 1,
       marginVertical: 20,
-      
+    },
+    selectCatText: {
+      // margin: 7,
+    },
+    selectCatTextBold: {
+      fontWeight: 'bold',
+
     },
     categoryButton: {
       fontSize: 14,
       // fontWeight: 'bold',
-      
     },
       
     categoryItem: {
